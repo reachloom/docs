@@ -1,0 +1,93 @@
+---
+title: "MCP example workflows"
+description: "Create, review, translate, and export assets with your agent."
+sidebar:
+  order: 36
+---
+
+These examples describe real registered tools. Replace example IDs with values returned by Reachloom. They are not ready-made files or promises of a particular visual result.
+
+## Create screenshots
+
+> Find my app and make a screenshot set from its uploaded screens. Use short headlines. Show me the project before exporting.
+
+The agent should follow this sequence:
+
+1. `get_account` and `list_apps` to check the account and choose an app.
+2. `list_assets` and `list_styles` to choose screens and a style.
+3. `generate_screenshots` to start generation.
+4. `get_job` every few seconds until it returns a finished `projectId` or an error.
+5. `get_project` to read the result and text layer IDs.
+6. `set_text` if a headline needs editing.
+
+Example generation arguments:
+
+```json
+{
+  "appId": "YOUR_APP_ID",
+  "assetIds": ["FIRST_ASSET_ID", "SECOND_ASSET_ID"],
+  "name": "Launch screenshots",
+  "canvasPreset": "iphone-6.9",
+  "idempotencyKey": "launch-screenshots-v1"
+}
+```
+
+## Add a language
+
+> Add German and Turkish to this screenshot project. Keep English.
+
+Read the project, then call `translate_project` once for each language with `locale: "de"` and `locale: "tr"`. Review both versions. Translation requires a paid plan and uses credits.
+
+## Make a promo video
+
+> Make a short promo from my uploaded screens, with a feature highlight and a closing message.
+
+Use `list_styles`, then `generate_video`. Poll `get_job` and inspect the finished project. For an App Store preview preset, call `validate_video_export` before exporting.
+
+For a single moving device shot, use `create_mockup_video` instead. Creating that project uses no AI generation credits; export rules still apply.
+
+## Edit and publish the website
+
+> Make the hero on my website punchier, give it a new look, and publish it.
+
+Call `rewrite_site_section` with `section: "hero"` and `style: "punchier"`, then `restyle_site`. Both save to the draft only. Check the result, and call `publish_site` only when the person asks. To write a page, call `write_site_page` with `kind: "privacy"`, `"terms"` or `"support"`. If the page already has text the tool refuses, so ask first and call it again with `replace: true`.
+
+## Design an app icon
+
+> Make a new app icon for my app, then try a different colour.
+
+Call `list_icons`, then `create_icon` with a name. Call `design_icon_with_ai` with the new icon's ID to have the AI design it, and call it again for another look. Use `parts: ["colors"]` to change only the colours. `update_icon` sets exact values, such as `design: { "from": "#0ea5e9", "to": "#1d4ed8" }`. Each AI design costs 10 credits.
+
+## Write the store listing
+
+> Write the English subtitle and keywords for my app, then add a second variant to compare.
+
+Call `get_aso` to read what is saved. Call `save_aso` with `locale: "en"` and every field you want to keep, because it replaces the whole language. Call `create_aso_variant` with `fromVariantId` to copy a variant, then edit the copy. Nothing is sent to the App Store.
+
+## Track keywords
+
+> Track "photo journal" and "skin diary" for my app, then tell me where I rank.
+
+Call `add_keyword` for each, then `list_keywords`. Keyword tracking needs a paid plan.
+
+## Clean up
+
+> Delete the exports of my old project, then the project.
+
+Call `list_exports`, then `delete_export` for each. Call `delete_project` last: it also deletes the project's exports and fails while an unfinished release uses it. These tools are destructive, so ask first.
+
+## Export a project
+
+Call `export_project` with a project ID and valid preset IDs from `list_styles`:
+
+```json
+{
+  "projectId": "YOUR_PROJECT_ID",
+  "presets": ["iphone-6.9"],
+  "locales": ["en", "de", "tr"]
+}
+```
+
+Poll `get_export` using the returned `renderId`. Download the files only after the export is done. The links expire after one hour; call the tool again for fresh links.
+
+Use the same idempotency key when retrying the same generation request. Use a new key for a different generation.

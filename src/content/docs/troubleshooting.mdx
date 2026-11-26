@@ -1,0 +1,32 @@
+---
+title: "Troubleshooting"
+description: "Check common upload, editor, export, and connection problems."
+sidebar:
+  order: 50
+---
+
+## A file will not upload
+
+Check its format and size. Images can be up to 15 MB; recordings can be up to 100 MB. Check your account’s remaining storage. See [assets](/getting-started/assets).
+
+## An AI result needs work
+
+Review the app details and the screens you supplied. Edit the project directly, or ask the agent to adjust text using the IDs from `get_project`. A new AI generation uses credits, so avoid repeating it before reviewing the current result.
+
+## The Reachloom AI chat does not work
+
+The chat is part of the Pro plan. If it says it is not available, check your plan on the [billing page](https://app.reachloom.app/account/billing). If it says you do not have enough credits, see [plans and credits](/account/plans).
+
+A screenshot set or promo video shows a progress card in the chat. If you reload while it runs, the card comes back and keeps following the job. If the card says it could not be made, read the reason on it and try again. Use the bin icon to clear the conversation and start fresh. See [Chat with Reachloom AI](/ai/chat).
+
+## The export is not ready
+
+Generation and rendering are separate background jobs. Check the job or export status and read any error. With MCP, use `get_job` for generation and `get_export` for rendering.
+
+## A store update fails
+
+Check the connected app, permissions, selected language, and whether the store version is editable. Review the message shown by Reachloom. If you connected with “Keep on this computer”, open Reachloom in the browser that holds the key and keep the page open. If a push or submit failed, open the log and retry; only what did not go through is sent again.
+
+## I need help
+
+Email [hello@reachloom.app](mailto:hello@reachloom.app). Include the tool name, what you expected, what happened, and any error message. A project ID and a screenshot can help. Do not include passwords, API keys, or private download links.

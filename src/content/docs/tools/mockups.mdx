@@ -1,0 +1,32 @@
+---
+title: "Device mockups"
+description: "Place your app screens inside device frames and models."
+sidebar:
+  order: 13
+---
+
+Open **Mockups** in your app and choose a screen to show. Use a 2D frame or a 3D device model, then adjust the device angle, scale, and background. For a 3D device, pick a pose (Front, Turn Left, Turn Right, Hero Left or Hero Right) or choose **Custom** and drag the device to any angle. The motion you choose plays on top of that starting angle.
+
+Use a mockup when you need a device visual for a website, social post, or release announcement. Check that the app screen is readable and the frame fits the image.
+
+## AI actions in the mockup editor
+
+Press the sparkle button at the top of the mockup editor for the AI actions:
+
+- **Suggest a setup** changes the background, the phone finish, the motion and the length.
+- **New look** changes only the background and the phone finish.
+- **New motion** changes only the motion and the length.
+
+Each costs 10 AI credits and applies as ordinary edits, so one **Undo** takes it back. The finish is set on every device in the mockup. A new motion replaces the keyframes of every device, so use **New look** to keep keyframes you made by hand.
+
+## Make a moving mockup
+
+The MCP tool `create_mockup_video` creates a short clip from one screenshot or recording. You can choose a motion preset, aspect ratio, duration, 2D or 3D rendering, a starting pose for 3D (`front`, `turn-left`, `turn-right`, `hero-left` or `hero-right`), and background and accent colors.
+
+Creating this clip uses no AI generation credits. To get a suggestion first, an agent can call `suggest_mockup_setup`, which costs 10 credits. [Export costs and limits](/account/plans) still apply.
+
+## Example request
+
+> Put my first uploaded screen in a phone. Make an eight-second vertical clip with a pink background.
+
+Your agent should find the asset and use the supported motion and aspect values. See [tool reference](/api/tools).

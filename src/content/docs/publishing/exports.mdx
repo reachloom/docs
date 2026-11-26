@@ -1,0 +1,36 @@
+---
+title: "Export images and videos"
+description: "Download the sizes, formats, and languages for your release."
+sidebar:
+  order: 21
+---
+
+Open the export controls in your project and choose the sizes and languages you need. Screenshot exports are PNG files; video exports are MP4 files. A screenshot export may also include a ZIP bundle.
+
+Sizes are grouped by store: **App Store** and **Google Play** for screenshots, graphics, and promo videos, with social media and ad sizes alongside. Pick the group that matches where the files will go. To send them straight to a store, connect the app instead: see [App Store Connect](/publishing/app-store-connect) and [Google Play](/publishing/google-play).
+
+## Before exporting
+
+Check the selected app, project, device sizes, and languages. Play a video preview and check that text stays readable throughout the scenes.
+
+Free exports are watermarked, smaller, and cost 100 credits per export. Solo and Pro include full-resolution exports without a watermark, and each export costs 50 credits.
+
+## Background exports
+
+Rendering runs in the background. Wait for the export to finish before downloading. If it fails, read the error, check the project, and try again after correcting the problem.
+
+With MCP, `export_project` returns a `renderId`. Poll `get_export` every few seconds until the status is `done` or `failed`.
+
+## Delete an export
+
+Open **Exports** in your app. Use the menu on a finished, failed or canceled export, or right-click it, and choose **Delete export**. Its files and download links are removed and the project stays. An export that is still running has to finish, or be canceled, first.
+
+To delete several, hold **Cmd** (**Ctrl** on Windows) to show a checkbox on each row, pick them, and delete from the bar at the bottom. Exports that are still running cannot be selected. Old exports are also deleted for you after a while.
+
+With MCP, `list_exports` shows the latest exports and `delete_export` removes one.
+
+## Download links
+
+MCP export links work without signing in and expire after one hour. Call `get_export` again to get fresh links. Treat these links as shared access to the exported files.
+
+See [MCP workflows](/ai/workflows) for a full generation and export sequence.
