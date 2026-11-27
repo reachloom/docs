@@ -1,20 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1080" viewBox="0 0 1080 1080" role="img" aria-labelledby="title desc">
   <title id="title">Reachloom</title>
-  <desc id="desc">Reachloom: a white paper plane launching across a pink-accented rainbow gradient.</desc>
+  <desc id="desc">Reachloom: a bold white arrow going up and to the right, on a pink-accented rainbow gradient.</desc>
   <style>
-    .reachloom-plane {
-      transform-origin: 540px 540px;
-      animation: reachloom-takeoff 1050ms cubic-bezier(.22, 1, .36, 1) both;
-    }
-    @keyframes reachloom-takeoff {
-      0% { opacity: 0; transform: translate(-150px, 150px) rotate(-12deg) scale(.82); }
-      28% { opacity: 1; }
-      72% { opacity: 1; transform: translate(16px, -16px) rotate(2deg) scale(1.02); }
-      100% { opacity: 1; transform: translate(0, 0) rotate(0) scale(1); }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .reachloom-plane { animation: none; }
-    }
+    /* Once, on load: the arrow shoots in from the bottom left and settles. */
+    .reachloom-mark { animation: reachloom-shoot 720ms cubic-bezier(.22, 1.25, .36, 1) both; }
+    @keyframes reachloom-shoot { from { opacity: 0; transform: translate(-170px, 170px); } 35% { opacity: 1; } to { opacity: 1; transform: translate(0, 0); } }
+    @media (prefers-reduced-motion: reduce) { .reachloom-mark { animation: none; } }
   </style>
   <defs>
     <linearGradient id="brand-pink" x1="0" y1="1080" x2="1080" y2="0" gradientUnits="userSpaceOnUse">
@@ -433,10 +424,6 @@
       <stop offset=".72" stop-color="#8552e7" stop-opacity=".4"/>
       <stop offset="1" stop-color="#8552e7" stop-opacity="0"/>
     </radialGradient>
-    <linearGradient id="plane-fold" x1="435" y1="640" x2="720" y2="365" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#dce4f3"/>
-      <stop offset="1" stop-color="#f5f7fc"/>
-    </linearGradient>
     <filter id="plane-shadow" x="-25%" y="-25%" width="150%" height="160%" color-interpolation-filters="sRGB">
       <feDropShadow dx="0" dy="14" stdDeviation="16" flood-color="#25204b" flood-opacity=".18"/>
     </filter>
@@ -462,11 +449,10 @@
     <path fill="url(#bottom-right-color)" d="M0 0H1080V1080H0Z"/>
     <path fill="url(#brand-pink)" d="M0 0H1080V1080H0Z"/>
   </g>
-  <g class="reachloom-plane" filter="url(#plane-shadow)">
-    <g transform="translate(540 540) scale(1.15) translate(-540 -540)">
-    <path fill="#fff" d="M259 462 798 262Q827 251 818 282L676 800Q668 830 647 808L503 656 421 737Q403 755 405 729L418 580 258 508Q224 492 259 462Z"/>
-    <path fill="url(#plane-fold)" d="M418 580 757 319 471 626 405 743 418 580Z"/>
-    <path fill="#c9d4e8" d="M471 626 503 656 421 737Q403 755 405 729L471 626Z"/>
+  <!-- An arrow going up and out: reaching people. -->
+  <g class="reachloom-mark">
+    <g filter="url(#plane-shadow)">
+      <path fill="#fff" d="M420 300H780V660H648V525L393 780L300 687L555 432H420Z"/>
     </g>
   </g>
 </svg>
