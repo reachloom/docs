@@ -38,3 +38,17 @@ An email can remain queued after its delay if the mailbox, working hours, limits
 Reachloom checks blocked addresses and domains again before sending. It also prevents another first email to the same address in the workspace, even if a campaign or page was deleted.
 
 Opt-outs, bounces, and refusals stop further outreach to that address. Review them in [Exclusions](/account/exclusions).
+
+## Address checks
+
+Before an address is saved or an email is sent, Reachloom checks that it is written correctly and that its domain has mail records. It never contacts the mailbox itself.
+
+- An address whose domain cannot receive email is not used. The page stays in **Needs email** and its notes say why. A typed address is refused with the reason. If a domain stops accepting mail after an email was drafted, the email is cancelled.
+- A probable typo of a big provider, such as gmial.com, is flagged and can still be sent.
+- If the lookup itself fails, the address is not blocked.
+
+## Automatic pause
+
+Many bounces damage a mailbox. If 8% or more of the emails sent in the last 7 days bounced (with at least 10 sent), or 5 emails bounced within a day, Reachloom switches off every campaign that sends from the workspace's mailbox. Each campaign's [Activity](/tools/activity) says why, and you get an alert if you have set up [notifications](/account/notifications).
+
+Bounced addresses are already on your do-not-contact list. When you switch a campaign on again, Reachloom asks you to confirm and counts only new bounces. The workspace chat and MCP cannot switch a paused mailbox back on. Reachloom cannot see spam complaints through Gmail, Outlook, or SMTP, so bounces are the signal it uses.
