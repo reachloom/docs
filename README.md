@@ -1,6 +1,6 @@
 # Reachloom docs
 
-Documentation for [Reachloom](https://app.reachloom.app), published at https://docs.reachloom.app.
+Documentation for [Reachloom](https://my.reachloom.app), published at https://docs.reachloom.app.
 
 Built with [Nimbus Docs](https://nimbus-docs.com) on Astro, Tailwind v4, and Pagefind search. Pages are MDX files in `src/content/docs/`.
 

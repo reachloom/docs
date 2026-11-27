@@ -11,7 +11,7 @@ Pick your agent below. Each tab shows how to connect with [OAuth](/ai/mcp-oauth)
 Every example uses the hosted server address:
 
 ```txt
-https://app.reachloom.app/mcp
+https://my.reachloom.app/mcp
 ```
 
 If you use another Reachloom address, copy yours from the workspace's **Settings → MCP**.
@@ -37,7 +37,7 @@ These steps follow each agent's own documentation. Menus and commands can change
 **OAuth**
 
 ```sh
-claude mcp add --transport http reachloom https://app.reachloom.app/mcp
+claude mcp add --transport http reachloom https://my.reachloom.app/mcp
 ```
 
 Then sign in. Inside Claude Code run `/mcp`, choose **reachloom**, and follow the browser sign-in. Or run this in your shell:
@@ -49,7 +49,7 @@ claude mcp login reachloom
 **API key**
 
 ```sh
-claude mcp add --transport http reachloom https://app.reachloom.app/mcp \
+claude mcp add --transport http reachloom https://my.reachloom.app/mcp \
   --header "Authorization: Bearer $REACHLOOM_API_KEY"
 ```
 
@@ -62,7 +62,7 @@ Add `--scope project` to save the server in `.mcp.json`. Use a variable so the k
   "mcpServers": {
     "reachloom": {
       "type": "http",
-      "url": "https://app.reachloom.app/mcp",
+      "url": "https://my.reachloom.app/mcp",
       "headers": { "Authorization": "Bearer ${REACHLOOM_API_KEY}" }
     }
   }
@@ -84,7 +84,7 @@ The Claude app and claude.ai use custom connectors. They connect with OAuth.
 
 1. Open **Settings**, then **Connectors**.
 2. Choose **Add custom connector**.
-3. Enter the name `Reachloom` and the server address `https://app.reachloom.app/mcp`.
+3. Enter the name `Reachloom` and the server address `https://my.reachloom.app/mcp`.
 4. Click **Add**, then **Connect**. Sign in to Reachloom and click **Allow**.
 
 Claude on the web needs an address it can reach from the internet. It cannot reach `localhost`.
@@ -102,7 +102,7 @@ Add the server to `.cursor/mcp.json` in your project, or to `~/.cursor/mcp.json`
 {
   "mcpServers": {
     "reachloom": {
-      "url": "https://app.reachloom.app/mcp"
+      "url": "https://my.reachloom.app/mcp"
     }
   }
 }
@@ -118,7 +118,7 @@ Cursor can read environment variables in `headers`:
 {
   "mcpServers": {
     "reachloom": {
-      "url": "https://app.reachloom.app/mcp",
+      "url": "https://my.reachloom.app/mcp",
       "headers": { "Authorization": "Bearer ${env:REACHLOOM_API_KEY}" }
     }
   }
@@ -135,7 +135,7 @@ You can also add the server in Cursor under **Settings**, then **MCP**.
 **OAuth**
 
 ```sh
-codex mcp add reachloom --url https://app.reachloom.app/mcp
+codex mcp add reachloom --url https://my.reachloom.app/mcp
 codex mcp login reachloom
 ```
 
@@ -147,7 +147,7 @@ Add the server to `~/.codex/config.toml`, or to `.codex/config.toml` in a projec
 
 ```toml
 [mcp_servers.reachloom]
-url = "https://app.reachloom.app/mcp"
+url = "https://my.reachloom.app/mcp"
 bearer_token_env_var = "REACHLOOM_API_KEY"
 ```
 
@@ -169,7 +169,7 @@ VS Code uses GitHub Copilot's agent mode for MCP.
 Run this in a terminal. It adds the server to your VS Code user profile:
 
 ```sh
-code --add-mcp '{"name":"reachloom","type":"http","url":"https://app.reachloom.app/mcp"}'
+code --add-mcp '{"name":"reachloom","type":"http","url":"https://my.reachloom.app/mcp"}'
 ```
 
 Or open the Command Palette and run **MCP: Add Server**, choose **HTTP**, and enter the address. VS Code asks you to sign in when it first connects.
@@ -191,7 +191,7 @@ Add this to `.vscode/mcp.json`. VS Code asks for the key the first time the serv
   "servers": {
     "reachloom": {
       "type": "http",
-      "url": "https://app.reachloom.app/mcp",
+      "url": "https://my.reachloom.app/mcp",
       "headers": { "Authorization": "Bearer ${input:reachloom-key}" }
     }
   }
@@ -206,7 +206,7 @@ The top-level key is `servers`, not `mcpServers`.
 **OAuth**
 
 ```sh
-gemini mcp add --transport http reachloom https://app.reachloom.app/mcp
+gemini mcp add --transport http reachloom https://my.reachloom.app/mcp
 ```
 
 Then start Gemini CLI and run:
@@ -220,7 +220,7 @@ OAuth needs a browser on the same computer. It does not work over plain SSH or i
 **API key**
 
 ```sh
-gemini mcp add --transport http reachloom https://app.reachloom.app/mcp \
+gemini mcp add --transport http reachloom https://my.reachloom.app/mcp \
   --header "Authorization: Bearer $REACHLOOM_API_KEY"
 ```
 
@@ -237,7 +237,7 @@ gemini mcp list
 
 Any agent that supports remote MCP over **Streamable HTTP** can connect. You need two things:
 
-- The server address: `https://app.reachloom.app/mcp`.
+- The server address: `https://my.reachloom.app/mcp`.
 - A way to sign in: OAuth, or the header `Authorization: Bearer YOUR_API_KEY`.
 
 If your agent supports OAuth, add the server with no header. The agent gets a `401` answer, finds the sign-in page, and opens your browser.
@@ -247,7 +247,7 @@ If it only supports headers, add the header with an API key.
 If your agent only supports local (stdio) MCP servers, it cannot connect to Reachloom directly. Use a bridge tool that turns a remote server into a local one, such as `mcp-remote`:
 
 ```sh
-npx -y mcp-remote https://app.reachloom.app/mcp
+npx -y mcp-remote https://my.reachloom.app/mcp
 ```
 
 For the exact details of how the server checks credentials, see [Authentication](/api/authentication).

@@ -2,7 +2,7 @@
 
 Astro-based docs. The `nimbus-docs` package handles content schemas, sidebar/TOC, MDX→markdown, build hooks, and the `nimbus` CLI. Everything in `src/` is yours to edit.
 
-This site documents [Reachloom](https://app.reachloom.app), a browser app for finding fitting pages and running email outreach. This repo (`reachloom/docs`) only holds documentation. The dashboard source lives in `../dashboard` and the Hugo landing site in `../landing`. Check the dashboard implementation before documenting behavior. Campaigns, pages, Gmail outreach, conversations, automation, notifications, members, billing, chat, and workspace-scoped MCP are available. WordPress publishing, the content editor, and a calendar connection are not built yet; calls use a booking link. MCP only reads and prepares work: it cannot send, approve, switch campaigns on, delete data, or manage settings.
+This site documents [Reachloom](https://my.reachloom.app), a browser app for finding fitting pages and running email outreach. This repo (`reachloom/docs`) only holds documentation. The dashboard source lives in `../dashboard` and the Hugo landing site in `../landing`. Check the dashboard implementation before documenting behavior. Campaigns, pages, Gmail outreach, conversations, automation, notifications, members, billing, chat, and workspace-scoped MCP are available. WordPress publishing, the content editor, and a calendar connection are not built yet; calls use a booking link. MCP only reads and prepares work: it cannot send, approve, switch campaigns on, delete data, or manage settings.
 
 ## File layout
 
