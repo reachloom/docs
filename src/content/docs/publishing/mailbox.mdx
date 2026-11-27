@@ -15,9 +15,17 @@ Each workspace sends from one mailbox. Open **Settings → Mailbox** and choose 
 
 All three work the same after they are connected. Sending limits, the cancel delay, sending hours, and the protections in [review and sending](/publishing/sending) apply to every mailbox type.
 
+## How established is the mailbox?
+
+When you connect, choose **New**, **Some history** or **Established**. A new mailbox sends a few first emails a day at first and more each day. See [warm-up](/publishing/sending#warm-up). For a new domain, set up SPF, DKIM and DMARC first, and prefer a separate domain from your main one.
+
 ## What Reachloom reads
 
 Reachloom reads only the conversations started by its own sent emails. It does not import your inbox, whichever mailbox you connect. Replies are checked in the background, and **Check inbox** looks right away.
+
+## Deleting a workspace or account
+
+Deleting a workspace, or your account with the workspaces only you use, asks Google to revoke Reachloom's access first. Microsoft offers no way to revoke a saved sign-in from here, so remove it in your Microsoft account's app permissions if you want it gone there too. A saved SMTP password is deleted with the connection.
 
 ## Change the mailbox
 

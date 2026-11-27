@@ -33,6 +33,10 @@ Automatic first emails and follow-ups are normally at least five minutes apart a
 
 An email can remain queued after its delay if the mailbox, working hours, limits, or billing prevent sending. Check its reason and the campaign's [Activity](/tools/activity).
 
+## What every first email contains
+
+A first email or follow-up ends with your signature, your [postal address](/publishing/sender), the line asking the reader to reply "no", and an unsubscribe link (which you can turn off). Nothing is sent until the postal address is set.
+
 ## Contact rules
 
 Reachloom checks blocked addresses and domains again before sending. It also prevents another first email to the same address in the workspace, even if a campaign or page was deleted.
@@ -52,3 +56,23 @@ Before an address is saved or an email is sent, Reachloom checks that it is writ
 Many bounces damage a mailbox. If 8% or more of the emails sent in the last 7 days bounced (with at least 10 sent), or 5 emails bounced within a day, Reachloom switches off every campaign that sends from the workspace's mailbox. Each campaign's [Activity](/tools/activity) says why, and you get an alert if you have set up [notifications](/account/notifications).
 
 Bounced addresses are already on your do-not-contact list. When you switch a campaign on again, Reachloom asks you to confirm and counts only new bounces. The workspace chat and MCP cannot switch a paused mailbox back on. Reachloom cannot see spam complaints through Gmail, Outlook, or SMTP, so bounces are the signal it uses.
+
+## Warm-up
+
+A mailbox that has not sent cold email before can be blocked if it suddenly sends a lot. So a new mailbox starts small and sends more each day. Reachloom does not send fake replies between mailboxes to "warm" them: it is a real ramp, and nothing else.
+
+When you connect a mailbox, say how established it is:
+
+| You say | It starts at | Reaches 50 a day |
+| --- | --- | --- |
+| New | 5 a day | on day 21 |
+| Some history | about 20 a day | on day 21 |
+| Established | no warm-up | at once |
+
+Only **first emails and follow-ups** are held. Answers to people who wrote to you are never held back and do not count toward the number. Your own daily limits still apply on top.
+
+Each day the number goes up by one step when the mailbox was really used (at least half of the day's number was sent) and bounces were low. It holds when the mailbox was barely used, so a quiet mailbox does not warm up by waiting. It holds when more than 3% bounced, and goes back three days at 8% or at three bounces. If emails bounce enough, sending still [pauses by itself](#automatic-pause).
+
+**Settings → Sending** shows the day, today's number, and lets you change how established the mailbox is. Choosing Established ends the warm-up and asks you to confirm. Connecting the same address again keeps its progress; a different address starts again.
+
+While the number is used up, a first email waits and the campaign's [Activity](/tools/activity) says so once a day. The drafts a campaign writes are limited to what can actually be sent.
