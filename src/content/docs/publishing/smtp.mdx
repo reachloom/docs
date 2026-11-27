@@ -1,0 +1,40 @@
+---
+title: "Connect another mailbox (SMTP and IMAP)"
+description: "Send from Zoho, Fastmail, iCloud, Yahoo, or your own domain with an app password."
+sidebar:
+  order: 21.3
+---
+
+Use this for any mailbox that offers SMTP to send and IMAP to read replies. Open **Settings → Mailbox**, choose **Connect mailbox**, and pick **Other (SMTP + IMAP)**.
+
+## Fill in the form
+
+1. Choose a **Provider**. Zoho Mail, Fastmail, iCloud Mail, and Yahoo Mail fill in the servers and ports for you. Choose **Other** for your own domain and enter them yourself.
+2. Enter the **Email address** to send from.
+3. Enter the **User name**. It is usually the email address.
+4. Enter the **Password**. For most providers this must be an app password, not your normal password. Each provider's note on the form says where to create one.
+5. Choose **Connect**. Reachloom tries both servers before it saves anything, so a wrong password or server shows an error and nothing is connected.
+
+## Servers and ports
+
+| Server | Allowed ports |
+| --- | --- |
+| SMTP (sending) | 25, 465, 587, 2525 |
+| IMAP (reading replies) | 143, 993 |
+
+The server must be a public address. Reachloom does not connect to private networks. Use port 465 or 587 for sending and 993 for reading where your provider allows it.
+
+## Your password
+
+The password is stored encrypted and is never shown again or sent back to your browser. Change it at your provider and connect again if you reset it. Removing the mailbox deletes the stored password.
+
+## What Reachloom reads
+
+Reachloom reads only the conversations started by its own sent emails. It does not import your inbox. See [choose a mailbox](/publishing/mailbox).
+
+## If it does not connect
+
+- Check that SMTP and IMAP are switched on for the account at your provider.
+- Use an app password if the provider requires one, such as iCloud, Yahoo, Zoho, and Fastmail.
+- Check the server names and ports against your provider's help page.
+- Some providers limit how many emails an account can send in a day. Reachloom's daily limit does not raise that limit.

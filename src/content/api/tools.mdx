@@ -11,7 +11,7 @@ All tools act inside the workspace attached to the current key or OAuth connecti
 
 | Tool | Inputs | Result |
 | --- | --- | --- |
-| `get_status` | None | Product profile, Gmail status, campaign counts, email states |
+| `get_status` | None | Product profile, mailbox status, campaign counts, email states |
 | `list_campaigns` | None | Campaign IDs, brief, on/off state, review setting, and `canBeChangedHere` |
 | `create_campaign` | `name`, `kind`, `ask` | Paused campaign requiring review, with `searchTaskId` if a search started |
 | `update_brief` | `campaignId`; optional `ask`, `target`, `angle`, `exclusions` | Updated brief fields |
@@ -44,7 +44,7 @@ All tools act inside the workspace attached to the current key or OAuth connecti
 
 | Tool | Inputs | Result |
 | --- | --- | --- |
-| `check_inbox` | None | Syncs tracked Gmail conversations for new replies |
+| `check_inbox` | None | Syncs tracked conversations for new replies |
 | `list_conversations` | None | Up to 60 conversations, with stage, intent, latest text, and `needsReply` |
 | `read_conversation` | `conversationId` | Messages and waiting answers; each message text is limited to 2,000 characters |
 | `draft_reply` | `conversationId`, `body` | Saves an answer as a draft and returns its `emailId` |
