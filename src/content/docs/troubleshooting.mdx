@@ -1,32 +1,40 @@
 ---
 title: "Troubleshooting"
-description: "Check common upload, editor, export, and connection problems."
+description: "Check common problems with searches, drafts, sending, and replies."
 sidebar:
   order: 50
 ---
 
-## A file will not upload
+Check the error on the page first, then the campaign's **Activity** screen.
 
-Check its format and size. Images can be up to 15 MB; recordings can be up to 100 MB. Check your account’s remaining storage. See [assets](/getting-started/assets).
+## Find leads added fewer pages
 
-## An AI result needs work
+A search can reject duplicates, excluded sites, unavailable pages, and pages that do not fit. Check the AI progress result. Refine the brief or search focus before trying again.
 
-Review the app details and the screens you supplied. Edit the project directly, or ask the agent to adjust text using the IDs from `get_project`. A new AI generation uses credits, so avoid repeating it before reviewing the current result.
+## A page has no email
 
-## The Reachloom AI chat does not work
+Open its side panel for a contact form, author page, or profile. Try the email search or add a known address yourself. Reachloom does not invent contact addresses, and cannot write a first email without one.
 
-The chat is part of the Pro plan. If it says it is not available, check your plan on the [billing page](https://app.reachloom.app/account/billing). If it says you do not have enough credits, see [plans and credits](/account/plans).
+## No emails were written
 
-A screenshot set or promo video shows a progress card in the chat. If you reload while it runs, the card comes back and keeps following the job. If the card says it could not be made, read the reason on it and try again. Use the bin icon to clear the conversation and start fresh. See [Chat with Reachloom AI](/ai/chat).
+The campaign needs pages with usable contact addresses that have not already been drafted, contacted, skipped, or excluded. Check the page statuses, daily draft capacity, and [usage limits](/account/plans).
 
-## The export is not ready
+## An approved email has not left
 
-Generation and rendering are separate background jobs. Check the job or export status and read any error. With MCP, use `get_job` for generation and `get_export` for rendering.
+Check that the campaign is on, Gmail is connected, and the cancel delay has passed. Automatic sending also waits for working hours, spacing, and both daily limits. Read the waiting reason before changing anything.
 
-## A store update fails
+Use **Take back** to return a queued email to a draft. **Send now** skips the scheduling wait, but still checks the recipient, mailbox, billing, and daily limits.
 
-Check the connected app, permissions, selected language, and whether the store version is editable. Review the message shown by Reachloom. If you connected with “Keep on this computer”, open Reachloom in the browser that holds the key and keep the page open. If a push or submit failed, open the log and retry; only what did not go through is sent again.
+## A send failed
 
-## I need help
+Failed sends are not retried automatically. Read the error and check Gmail before preparing another message. Avoid sending the same email from another tool without checking whether Gmail accepted it.
 
-Email [hello@reachloom.app](mailto:hello@reachloom.app). Include the tool name, what you expected, what happened, and any error message. A project ID and a screenshot can help. Do not include passwords, API keys, or private download links.
+## Replies do not appear
+
+Reachloom reads only conversations started by its own sent emails. Use **Check inbox** and confirm Gmail has permission to read replies. Reconnect if the mailbox needs it.
+
+## WordPress or calendar is unavailable
+
+WordPress publishing and the content editor are not built yet. Use a booking link in **Settings → Sending** for call requests; there is no calendar connection.
+
+For agent problems, see [MCP troubleshooting](/ai/troubleshooting). For help, use dashboard feedback or contact [hello@reachloom.app](mailto:hello@reachloom.app) with the page and error message.

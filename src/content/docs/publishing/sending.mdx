@@ -1,0 +1,40 @@
+---
+title: "Review and send emails"
+description: "Understand drafts, approval, cancel delays, and sending limits."
+sidebar:
+  order: 22
+---
+
+Use a campaign's **Emails** menu to write first emails. Reachloom reads each eligible page and prepares a message using your product profile and campaign brief.
+
+## Review drafts
+
+Open **Inbox → Drafts** and choose an email. Check the recipient, subject, message, and reason the page fits. Edit anything that needs changing.
+
+- **Approve** queues the email with a cancel delay, normally five minutes.
+- **Take back** returns a queued email to a draft before it leaves.
+- **Send now** sends directly after the contact, mailbox, billing, and daily limit checks.
+
+Editing a queued email returns it to a draft. Failed sends are not retried automatically.
+
+For campaigns that require review, emails wait until approved. With review off, the campaign can queue messages by itself while it is on. A paused campaign does not send queued emails automatically.
+
+## Set the sending window
+
+Open **Settings → Sending** to choose the workspace's time zone, working days, and start and end hours. These settings control automatic sends and scheduled campaign work.
+
+Manual sends with **Send now** or the reply box can go out outside the window and while the campaign is paused. They still obey contact rules and daily limits.
+
+## Daily limits and spacing
+
+Each campaign and the workspace mailbox have a daily limit. Both default to 10 and can be set up to 20. The mailbox limit covers all campaigns together. Usage is checked over the last 24 hours.
+
+Automatic first emails and follow-ups are normally at least five minutes apart across the mailbox. Answers in an existing conversation do not wait for that gap.
+
+An email can remain queued after its delay if Gmail, working hours, limits, or billing prevent sending. Check its reason and the campaign's [Activity](/tools/activity).
+
+## Contact rules
+
+Reachloom checks blocked addresses and domains again before sending. It also prevents another first email to the same address in the workspace, even if a campaign or page was deleted.
+
+Opt-outs, bounces, and refusals stop further outreach to that address. Review them in [Exclusions](/account/exclusions).

@@ -5,11 +5,11 @@ sidebar:
   order: 1
 ---
 
-The MCP server at `/mcp` accepts two kinds of credentials. Both are sent as a bearer token, and both act as your account. This page is the technical reference. For setup steps, see [Connect with OAuth](/ai/mcp-oauth) and [Connect with an API key](/ai/mcp-api-key).
+The MCP server at `/mcp` accepts two kinds of credentials. Both are sent as a bearer token, and both act for one person in one workspace. This page is the technical reference. For setup steps, see [Connect with OAuth](/ai/mcp-oauth) and [Connect with an API key](/ai/mcp-api-key).
 
 | | OAuth access token | API key |
 |---|---|---|
-| Prefix | `afo_` | `af_live_` |
+| Prefix | `rlo_` | `rl_live_` |
 | Lifetime | 1 hour, renewed with a refresh token | Until revoked |
 | Made by | The OAuth flow, after you click Allow | You, on the Developer API page |
 | Revoked by | Disconnect the agent | Revoke the key |
@@ -41,7 +41,7 @@ Reachloom follows the OAuth 2.0 authorization code flow with PKCE, which MCP cli
 
 2. **Register.** The client registers itself and gets a `client_id`.
 
-3. **Authorize.** The client sends you to `/oauth/authorize` with a PKCE challenge. You sign in and click Allow. Reachloom redirects back with a `code`.
+3. **Authorize.** The client sends you to `/oauth/authorize` with a PKCE challenge. You sign in, choose a workspace, and click Allow. Reachloom redirects back with a `code`.
 
 4. **Get tokens.** The client sends the `code` and its PKCE verifier to `/oauth/token` and gets an access token and a refresh token.
 
@@ -61,7 +61,7 @@ Reachloom follows the OAuth 2.0 authorization code flow with PKCE, which MCP cli
 | `/oauth/authorize` | The Allow page. |
 | `/oauth/token` | Exchanges a code or a refresh token for tokens. |
 
-These endpoints use no cookies. They allow requests from any web page, so browser-based clients can use them.
+The authorization page uses your signed-in browser session and asks which workspace to connect. Metadata, registration, and token endpoints allow cross-origin requests for browser-based clients.
 
 ### What Reachloom supports
 
@@ -147,10 +147,10 @@ The `redirect_uri` must be exactly the one used in step 2. The answer:
 
 ```json
 {
-  "access_token": "afo_…",
+  "access_token": "rlo_…",
   "token_type": "Bearer",
   "expires_in": 3600,
-  "refresh_token": "afr_…",
+  "refresh_token": "rlr_…",
   "scope": "mcp"
 }
 ```
@@ -183,23 +183,23 @@ Responses with tokens are never cached.
 
 ## API keys
 
-A key starts with `af_live_` and is followed by random characters. Create keys on the [Developer API](https://app.reachloom.app/account/developer-api) page.
+A key starts with `rl_live_` and is followed by random characters. Create keys in the workspace under **Settings → Developer API**.
 
 - Reachloom stores a hash of the key. The full value is shown once, when you create it.
-- You can have up to 20 active keys per account.
+- You can have up to 20 active keys per workspace.
 - A key name can be up to 60 characters.
 - The list shows the first characters of each key, the creation date, and the last use. The last-use time is updated at most once a minute.
 - Revoking a key works at once and cannot be undone.
 
-A key is tied to your account, not to one app.
+A key belongs to its workspace and the person who created it. It stops working if that person loses access to the workspace.
 
 ## Access and limits
 
-Both credentials give the same access as your account: all apps, files, and credits, within your plan. Nothing narrows it to one app or to read-only use. There is one scope, `mcp`.
+Both credentials use one workspace and the same preparation tools. They can read data, prepare campaigns and pages, and write drafts. They cannot send, approve, switch campaigns on, delete data, or manage settings. There is one OAuth scope, `mcp`. Workspace membership and usage limits still apply.
 
 | Limit | Value |
 |---|---|
-| MCP requests | 120 per minute for each account |
+| MCP requests | 120 per minute for each person and workspace |
 | Token requests | 120 per minute, shared |
 | Client registrations | 30 per hour, shared |
 

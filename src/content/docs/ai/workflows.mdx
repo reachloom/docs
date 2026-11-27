@@ -1,93 +1,41 @@
 ---
-title: "MCP example workflows"
-description: "Create, review, translate, and export assets with your agent."
+title: "Example workflows"
+description: "Prepare a campaign, review drafts, or catch up on replies with MCP."
 sidebar:
-  order: 36
+  order: 37
 ---
 
-These examples describe real registered tools. Replace example IDs with values returned by Reachloom. They are not ready-made files or promises of a particular visual result.
+Connect your agent through [MCP](/ai/mcp) first. These workflows prepare work for you to review in the dashboard.
 
-## Create screenshots
+## Prepare a campaign
 
-> Find my app and make a screenshot set from its uploaded screens. Use short headlines. Show me the project before exporting.
+> Create a paused campaign called Resource lists. Ask maintained lists of monitoring tools to add our product. Find 20 pages and prepare five emails. Leave everything as drafts.
 
-The agent should follow this sequence:
+The agent can:
 
-1. `get_account` and `list_apps` to check the account and choose an app.
-2. `list_assets` and `list_styles` to choose screens and a style.
-3. `generate_screenshots` to start generation.
-4. `get_job` every few seconds until it returns a finished `projectId` or an error.
-5. `get_project` to read the result and text layer IDs.
-6. `set_text` if a headline needs editing.
+1. Read `get_status`.
+2. Call `create_campaign` with `kind: "list"`.
+3. Follow the returned `searchTaskId` with `get_task`, if present.
+4. Use `update_brief` to refine the target, angle, and exclusions.
+5. Read `list_pages`, then call `write_emails`.
+6. Show the drafts from `list_emails`.
 
-Example generation arguments:
+The first search starts when the campaign is created, so wait for it before starting another search. Open **Inbox → Drafts** to review the emails. The agent cannot approve them or switch the campaign on.
 
-```json
-{
-  "appId": "YOUR_APP_ID",
-  "assetIds": ["FIRST_ASSET_ID", "SECOND_ASSET_ID"],
-  "name": "Launch screenshots",
-  "canvasPreset": "iphone-6.9",
-  "idempotencyKey": "launch-screenshots-v1"
-}
-```
+## Add pages you found
 
-## Add a language
+> Add these three page addresses to the paused campaign, then show me its pages. Do not invent contact details.
 
-> Add German and Turkish to this screenshot project. Keep English.
+Use `add_pages` with `campaignId` and `urls`, then `list_pages`. The tool accepts page addresses only. Add contact emails in the dashboard or use `find_leads` to discover verified public addresses.
 
-Read the project, then call `translate_project` once for each language with `locale: "de"` and `locale: "tr"`. Review both versions. Translation requires a paid plan and uses credits.
+## Catch up on replies
 
-## Make a promo video
+> Check the Inbox, list conversations waiting for us, and draft an answer to this question. Leave it for me to send.
 
-> Make a short promo from my uploaded screens, with a feature highlight and a closing message.
+Use `check_inbox`, `list_conversations`, `read_conversation`, then `draft_reply`. The saved answer stays a draft. If your own answer is already waiting, the tool leaves it alone.
 
-Use `list_styles`, then `generate_video`. Poll `get_job` and inspect the finished project. For an App Store preview preset, call `validate_video_export` before exporting.
+## If a tool refuses a change
 
-For a single moving device shot, use `create_mockup_video` instead. Creating that project uses no AI generation credits; export rules still apply.
+An active campaign that sends without review cannot be changed through MCP. Pause it or enable **Review before sending** in the dashboard, then retry.
 
-## Edit and publish the website
-
-> Make the hero on my website punchier, give it a new look, and publish it.
-
-Call `rewrite_site_section` with `section: "hero"` and `style: "punchier"`, then `restyle_site`. Both save to the draft only. Check the result, and call `publish_site` only when the person asks. To write a page, call `write_site_page` with `kind: "privacy"`, `"terms"` or `"support"`. If the page already has text the tool refuses, so ask first and call it again with `replace: true`.
-
-## Design an app icon
-
-> Make a new app icon for my app, then try a different colour.
-
-Call `list_icons`, then `create_icon` with a name. Call `design_icon_with_ai` with the new icon's ID to have the AI design it, and call it again for another look. Use `parts: ["colors"]` to change only the colours. `update_icon` sets exact values, such as `design: { "from": "#0ea5e9", "to": "#1d4ed8" }`. Each AI design costs 10 credits.
-
-## Write the store listing
-
-> Write the English subtitle and keywords for my app, then add a second variant to compare.
-
-Call `get_aso` to read what is saved. Call `save_aso` with `locale: "en"` and every field you want to keep, because it replaces the whole language. Call `create_aso_variant` with `fromVariantId` to copy a variant, then edit the copy. Nothing is sent to the App Store.
-
-## Track keywords
-
-> Track "photo journal" and "skin diary" for my app, then tell me where I rank.
-
-Call `add_keyword` for each, then `list_keywords`. Keyword tracking needs a paid plan.
-
-## Clean up
-
-> Delete the exports of my old project, then the project.
-
-Call `list_exports`, then `delete_export` for each. Call `delete_project` last: it also deletes the project's exports and fails while an unfinished release uses it. These tools are destructive, so ask first.
-
-## Export a project
-
-Call `export_project` with a project ID and valid preset IDs from `list_styles`:
-
-```json
-{
-  "projectId": "YOUR_PROJECT_ID",
-  "presets": ["iphone-6.9"],
-  "locales": ["en", "de", "tr"]
-}
-```
-
-Poll `get_export` using the returned `renderId`. Download the files only after the export is done. The links expire after one hour; call the tool again for fresh links.
-
-Use the same idempotency key when retrying the same generation request. Use a new key for a different generation.
+A usage-limit error applies to all ways of working in the workspace. Check [billing and usage](/account/plans) rather than starting the same job through another client.

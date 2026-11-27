@@ -3,7 +3,7 @@ title: "Set up your agent"
 description: "Commands to connect Claude Code, Claude, Cursor, Codex, VS Code, Gemini CLI, and other agents to Reachloom."
 sidebar:
   label: "Agent setup"
-  order: 33
+  order: 36
 ---
 
 Pick your agent below. Each tab shows how to connect with [OAuth](/ai/mcp-oauth) (sign in) and with an [API key](/ai/mcp-api-key).
@@ -14,15 +14,15 @@ Every example uses the hosted server address:
 https://app.reachloom.app/mcp
 ```
 
-If you use another Reachloom address, copy yours from [MCP setup](https://app.reachloom.app/account/mcp).
+If you use another Reachloom address, copy yours from the workspace's **Settings → MCP**.
 
 ## Before you start
 
-- **OAuth:** nothing to prepare. You sign in in your browser.
-- **API key:** create a key on the [Developer API](https://app.reachloom.app/account/developer-api) page. Then save it in an environment variable, so it does not end up in a config file or in Git:
+- **OAuth:** nothing to prepare. You sign in in your browser and choose a workspace.
+- **API key:** create a key in the workspace's **Settings → Developer API**. Then save it in an environment variable, so it does not end up in a config file or in Git:
 
 ```sh
-export REACHLOOM_API_KEY="af_live_..."
+export REACHLOOM_API_KEY="rl_live_..."
 ```
 
 <Aside type="caution" title="Agent versions change">
@@ -139,7 +139,7 @@ codex mcp add reachloom --url https://app.reachloom.app/mcp
 codex mcp login reachloom
 ```
 
-The second command opens your browser. Sign in and click **Allow**.
+The second command opens your browser. Sign in, choose a workspace, and click **Allow**.
 
 **API key**
 
@@ -259,9 +259,9 @@ For the exact details of how the server checks credentials, see [Authentication]
 
 After you connect, ask your agent:
 
-> Check my Reachloom plan and list my apps.
+> Show my Reachloom workspace status and list its campaigns.
 
-It should call `get_account` and `list_apps`. Then try an [example workflow](/ai/workflows).
+It should call `get_status` and `list_campaigns`. Then try an [example workflow](/ai/workflows).
 
 ## If something goes wrong
 

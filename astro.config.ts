@@ -8,9 +8,9 @@ const nimbusConfig = defineNimbusConfig({
   // robots.txt, sitemap, and the links in /llms.txt.
   site: "https://docs.reachloom.app",
   title: "Reachloom Docs",
-  description: "Learn how to create App Store screenshots, promo videos, and launch assets with Reachloom and your AI agent.",
+  description: "Learn how to find leads, run email campaigns, handle replies, and track results with Reachloom.",
   locale: "en",
-  github: "https://github.com/reachloom-dev/docs",
+  github: "https://github.com/reachloom/docs",
   socialImageAlt: "Reachloom documentation preview",
   sidebar: {
     items: [

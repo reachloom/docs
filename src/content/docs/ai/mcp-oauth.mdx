@@ -6,7 +6,7 @@ sidebar:
   order: 34
 ---
 
-With OAuth you do not copy any secret. Your agent opens an Reachloom page, you check what it asks for, and you click **Allow**. The agent then gets its own access token and renews it by itself.
+With OAuth you do not copy any secret. Your agent opens a Reachloom page, you check what it asks for, and you click **Allow**. The agent then gets its own access token and renews it by itself.
 
 Use OAuth when you work on your own computer with a client like Claude Code, Cursor, or the Claude app. If your client cannot open a browser, use an [API key](/ai/mcp-api-key) instead.
 
@@ -14,7 +14,7 @@ Use OAuth when you work on your own computer with a client like Claude Code, Cur
 
 <Steps>
 
-1. Open [MCP setup](https://app.reachloom.app/account/mcp) and copy the server address.
+1. Open the workspace's **Settings → MCP** and copy the server address.
 
 2. Add the server in your client **without** an `Authorization` header. See the [agent setup guide](/ai/clients) for your agent.
 
@@ -22,13 +22,13 @@ Use OAuth when you work on your own computer with a client like Claude Code, Cur
 
 4. Reachloom opens in your browser. If you are not signed in, sign in first. You come back to the same request after that.
 
-5. Read the page, then click **Allow**.
+5. Read the page, choose the workspace to connect, then click **Allow**.
 
 6. Your browser goes back to your agent. It is connected.
 
 </Steps>
 
-Test it by asking: “Check my Reachloom plan and list my apps.”
+Test it by asking: “Show my Reachloom workspace status and list its campaigns.”
 
 ## What you see on the Allow page
 
@@ -36,7 +36,8 @@ The page is called **Connect an agent**. It shows:
 
 - The name the agent gave itself, for example “Claude Code”.
 - The Reachloom account it will use, shown as your email.
-- What it will be able to do: create and delete apps and files, generate screenshots and videos with AI (which uses your credits), and edit and export your work.
+- The workspace it will use. You can only choose a workspace you can open.
+- What it will be able to do: read workspace data, prepare campaigns and pages, and write drafts. It cannot send, approve, switch campaigns on, or delete data.
 - Where you will be sent back to after you choose.
 
 <Aside type="caution" title="Only allow what you started">
@@ -52,11 +53,11 @@ The agent holds two tokens:
 - An **access token** that works for 1 hour.
 - A **refresh token** that works for 30 days. The agent uses it to get a new access token before the old one ends. Each refresh also gives a new refresh token, and the old one stops working.
 
-If the agent is used at least once every 30 days, it stays connected. If it sits unused longer than that, it asks you to sign in again.
+If the agent refreshes its tokens within 30 days, it stays connected. If it sits unused longer than that, it asks you to sign in again.
 
 ## See and remove connections
 
-Open [Developer API](https://app.reachloom.app/account/developer-api). Under **Connected agents** you see each agent you allowed, when it connected, and when it was last used.
+Open **Settings → Developer API** in that workspace. Under **Connected agents** you see each agent you allowed, when it connected, and when it was last used.
 
 Click **Disconnect** to remove one. It stops working at once. The agent can ask you to sign in again later.
 

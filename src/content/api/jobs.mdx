@@ -1,20 +1,31 @@
 ---
-title: "Jobs and exports"
-description: "Follow background work from generation and export tools."
+title: "Background tasks"
+description: "Follow lead searches started through MCP."
 sidebar:
   order: 3
 ---
 
-Generation and export take time, so their tools return right away with an ID.
+`find_leads` returns a `taskId`. `create_campaign` can return a `searchTaskId` for its first search. Call `get_task` with either ID to follow that search.
 
-## Generation jobs
+```json
+{
+  "taskId": "TASK_ID"
+}
+```
 
-`generate_screenshots` and `generate_video` return a `jobId`. Call `get_job` with it. The status is `queued`, `running`, `done`, or `failed`. Jobs usually take under a minute, so wait a few seconds between calls. When the status is `done`, the result has a `projectId` you can edit and export.
+## Status and result
 
-Both tools take an optional `idempotencyKey`. Send the same key if you retry, so one request does not run twice.
+| Field | Meaning |
+| --- | --- |
+| `status` | `running`, `done`, or `failed` |
+| `total` | Number of pages requested |
+| `result` | Search counts when available: found, checked, added, duplicates, and rejected |
+| `error` | Failure reason, if one was recorded |
 
-## Exports
+Wait a few seconds between checks. A search can add fewer pages than requested. If `find_leads` returns `alreadyRunning: true`, follow that task rather than starting another one.
 
-`export_project` returns a `renderId`. Call `get_export` until its status is `done`. Finished exports include download links that work without signing in and expire after one hour. Call `get_export` again for fresh links.
+Tasks can only be read from the workspace of the current connection. The dashboard's AI progress window also shows search progress.
 
-You can export up to five sizes at once, and up to 20 languages.
+## Email drafting
+
+`write_emails` returns its drafting summary directly. Read saved drafts through `list_emails` and review them in the dashboard. This API has no asset generation, export, or download tools.

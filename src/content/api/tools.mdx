@@ -1,103 +1,66 @@
 ---
-title: "Tools"
-description: "The tools the Reachloom MCP server provides."
+title: "Tool reference"
+description: "Every tool registered by the Reachloom MCP server."
 sidebar:
   order: 2
 ---
 
-Tools that start work return an ID. Use [`get_job` or `get_export`](/api/jobs) to follow it. Check [`get_account`](#account) before a big run.
+All tools act inside the workspace attached to the current key or OAuth connection. Tools prepare work but cannot send or approve email.
 
-Tools that delete something are marked **destructive**, so a client can ask you before it runs one. Reachloom AI in the chat never gets the destructive tools: see [what the chat can do](/ai/chat).
+## Workspace and campaigns
 
-## Account
+| Tool | Inputs | Result |
+| --- | --- | --- |
+| `get_status` | None | Product profile, Gmail status, campaign counts, email states |
+| `list_campaigns` | None | Campaign IDs, brief, on/off state, review setting, and `canBeChangedHere` |
+| `create_campaign` | `name`, `kind`, `ask` | Paused campaign requiring review, with `searchTaskId` if a search started |
+| `update_brief` | `campaignId`; optional `ask`, `target`, `angle`, `exclusions` | Updated brief fields |
 
-| Tool | What it does |
-|---|---|
-| `get_account` | Shows your plan, AI credits left this period, and storage used. |
-| `list_apps` | Lists your apps, newest first. |
-| `list_styles` | Lists screenshot styles, video styles, and export sizes with their IDs. |
+`kind` is `docs`, `list`, `call`, or `custom`. A campaign name is 1–60 characters and its ask is at most 300 characters. Brief parts are at most 500 characters each. Give the full replacement text of every part you update.
 
-## Apps and files
+## Pages and searches
 
-| Tool | What it does |
-|---|---|
-| `create_app` | Creates an app. The Free plan allows one app. |
-| `list_assets` | Lists the files uploaded to an app. |
-| `upload_asset` | Adds a file from a public `https` URL, or as base64 with a file name and MIME type. |
-| `import_from_app_store` | Copies the public App Store listing of an app into yours. |
-| `delete_asset` | Destructive. Permanently deletes an uploaded file. It fails if the file is the app icon or is used in a project. |
+| Tool | Inputs | Result |
+| --- | --- | --- |
+| `list_pages` | `campaignId` | Up to 200 pages with title, contact, email, status, and fit |
+| `add_pages` | `campaignId`, `urls` | Add up to 50 web addresses; no contact email input |
+| `find_leads` | `campaignId`; optional `count`, `focus` | `taskId`, or an existing running task with `alreadyRunning: true` |
+| `get_task` | `taskId` | Status, total, result, and error |
 
-## Generate
+`count` is 10, 20, or 30 and defaults to 10. `focus` is at most 300 characters. See [background tasks](/api/jobs) for polling.
 
-| Tool | What it does |
-|---|---|
-| `generate_screenshots` | Starts the AI to build a screenshot set from your uploaded screens. Costs 50 credits, plus 100 with `illustrate`. |
-| `generate_video` | Starts the AI to build a promo video storyboard. Costs 50 credits. Free plan videos are limited to 15 seconds. |
-| `create_graphic` | Makes a graphic (a feature image or social card) from uploaded screenshots in one style and format. The AI writes the headline. Costs 50 credits. Edit it with `set_text` and export it with `export_project`. |
-| `create_mockup_video` | Makes a short video of one screenshot or recording in a phone with a motion preset. For 3D, `pose` sets the starting angle. No credits. |
-| `suggest_mockup_setup` | Asks the AI to suggest a mockup setup: background and accent colours, phone finish, motion and length. It creates nothing: use the answer with `create_mockup_video`. Give `parts` (`look` or `motion`) to change only some. Costs 10 credits. |
+## Emails
 
-## Edit
+| Tool | Inputs | Result |
+| --- | --- | --- |
+| `write_emails` | `campaignId`; optional `count` | Drafting summary; count is 1–10, default 5 |
+| `list_emails` | None | Up to 40 recently updated emails, with IDs, kinds, states, bodies, and errors |
+| `edit_draft` | `emailId`; optional `subject`, `body` | Saves a draft; queued emails are taken back first |
+| `take_back_email` | `emailId` | Returns a queued email to a draft |
 
-| Tool | What it does |
-|---|---|
-| `list_projects` | Lists the screenshot sets, graphics, videos and mockups of an app. |
-| `get_project` | Shows a project's style, languages, and the text of every scene with its layer IDs. |
-| `set_text` | Changes headlines, subheads, or badges using layer IDs from `get_project`. |
-| `set_template` | Switches a screenshot set to another style. Not for videos. |
-| `add_elements` | Adds elements to a project in place, like the Add Element menu: text, pill, rating, logo, device (2D, or 3D with a `pose` or exact `tilt`), AI illustration, image, sticker, icon, shape, store badge and QR code. Decoration goes behind the content and spreads over the corners. AI illustrations cost 300 credits. |
-| `translate_project` | Translates all text into another language. Costs 25 credits. Needs a paid plan. |
-| `remove_language` | Destructive. Removes a language you added. English cannot be removed. |
-| `validate_video_export` | Checks a video against the App Store preview rules before you export. |
-| `delete_project` | Destructive. Deletes a project (a screenshot set, graphic, video or mockup) with its saved versions and exports. Uploaded files stay. It fails while an unfinished release uses the project. |
+`edit_draft` needs at least one field. Subject is at most 300 characters and body at most 6,000. Drafting is also limited by daily capacity and workspace access.
 
-## Listing text
+## Conversations
 
-The text of your store listing, in variants. Saving only saves it in Reachloom: nothing is sent to the App Store or Google Play.
+| Tool | Inputs | Result |
+| --- | --- | --- |
+| `check_inbox` | None | Syncs tracked Gmail conversations for new replies |
+| `list_conversations` | None | Up to 60 conversations, with stage, intent, latest text, and `needsReply` |
+| `read_conversation` | `conversationId` | Messages and waiting answers; each message text is limited to 2,000 characters |
+| `draft_reply` | `conversationId`, `body` | Saves an answer as a draft and returns its `emailId` |
 
-| Tool | What it does |
-|---|---|
-| `get_aso` | Shows the variants of an app, and the saved text of every language in one variant (the active one unless you give `variantId`). |
-| `save_aso` | Creates or replaces the text of one language in one variant. It replaces the whole language, so send every field you want to keep. Fields are cut to the store limits. |
-| `create_aso_variant` | Adds a variant, empty or copied from another one. |
-| `rename_aso_variant` | Renames a variant. |
-| `delete_aso_variant` | Destructive. Deletes a variant and the text of all its languages. The last variant cannot be deleted. |
-| `delete_aso_language` | Destructive. Deletes the saved text of one language in a variant. English cannot be deleted. |
+A reply body is 10–5,000 characters and must include the whole message. It goes through the draft checks. `draft_reply` refuses won or archived conversations and does not replace an answer written or approved by a person.
 
-## Keywords
+## Restrictions and limits
 
-| Tool | What it does |
-|---|---|
-| `list_keywords` | Lists the keywords tracked for an app, with where the app ranks for each in the App Store (top 50). |
-| `add_keyword` | Starts tracking a keyword in a store country, up to 30. Needs a paid plan. |
-| `delete_keyword` | Destructive. Stops tracking a keyword. |
+`update_brief`, `add_pages`, `find_leads`, and `write_emails` refuse a campaign that is on and sends without review. Pause it or enable **Review before sending** in the app first.
 
-## App icons
+| Action | Hourly limit per person and workspace |
+| --- | --- |
+| Create campaign | 20 |
+| Add pages | 20 |
+| Find leads | 10 |
+| Write emails | 10 |
+| Check inbox | 20 |
 
-| Tool | What it does |
-|---|---|
-| `list_icons` | Lists the saved icon designs of an app, with their colours, mark and size. |
-| `create_icon` | Creates an icon design, or copies another one with `fromIconId`. The Free plan keeps one icon. |
-| `update_icon` | Renames an icon and changes any part of its design: the two gradient colours, the mark colour, a letter or symbol, and its size. It does not replace the app's current icon. |
-| `design_icon_with_ai` | Asks the AI for a new design and saves it: new colours, a new mark, or both with `parts`. Costs 10 credits. Run it again for another design. |
-| `delete_icon` | Destructive. Deletes a saved design. The app's current icon and exported images stay. |
-
-## Website
-
-| Tool | What it does |
-|---|---|
-| `rewrite_site_section` | Rewrites all the texts of one website section (`hero`, `features`, `screenshots` or `cta`) together, in a style: `shorter`, `punchier`, `benefit-led` or `longer`. Saves to the draft. Costs 15 credits. |
-| `restyle_site` | Picks a new colour palette and font for the website. Saves to the draft. Costs 10 credits. |
-| `write_site_page` | Writes the privacy, terms or support page. Refuses to replace a page that already has text unless `replace` is true. Saves to the draft. Costs 10 credits. |
-| `publish_site` | Publishes the saved draft, so visitors see it. Returns the public address. |
-
-These tools change the draft only. Nothing is public until `publish_site`.
-
-## Export
-
-| Tool | What it does |
-|---|---|
-| `export_project` | Starts an export of PNG screenshots or an MP4 video. On the Free plan exports have a watermark and cost 100 credits. Solo and Pro exports cost 50 credits. |
-| `get_export` | Shows the export state and download links when it is done. |
-| `list_exports` | Lists the latest exports of an app, newest first, with the project, sizes, languages and status. |
-| `delete_export` | Destructive. Deletes a finished export and its files, so its download links stop working. The project stays. An export that is still running has to finish or be canceled first. |
+The endpoint also allows 120 requests per minute per person and workspace. [Billing limits](/account/plans), contact rules, and draft checks still apply. There are no tools for sending, approval, deleting, switching campaigns on, or managing settings.

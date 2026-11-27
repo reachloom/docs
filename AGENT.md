@@ -2,7 +2,7 @@
 
 Astro-based docs. The `nimbus-docs` package handles content schemas, sidebar/TOC, MDX→markdown, build hooks, and the `nimbus` CLI. Everything in `src/` is yours to edit.
 
-This site documents [Reachloom](https://app.reachloom.app), a browser app that helps iOS developers prepare their apps for launch. This repo (`reachloom-dev/docs`) only holds the documentation, not the application source. The app lives in the `frameship` repo (`../frameship`) and the marketing site in `../landing`. For anything not covered here, check the app source rather than guessing. Do not claim Reachloom submits apps for review: users submit through App Store Connect themselves.
+This site documents [Reachloom](https://app.reachloom.app), a browser app for finding fitting pages and running email outreach. This repo (`reachloom/docs`) only holds documentation. The dashboard source lives in `../dashboard` and the Hugo landing site in `../landing`. Check the dashboard implementation before documenting behavior. Campaigns, pages, Gmail outreach, conversations, automation, notifications, members, billing, chat, and workspace-scoped MCP are available. WordPress publishing, the content editor, and a calendar connection are not built yet; calls use a booking link. MCP only reads and prepares work: it cannot send, approve, switch campaigns on, delete data, or manage settings.
 
 ## File layout
 

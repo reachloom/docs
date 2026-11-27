@@ -1,40 +1,38 @@
 ---
 title: "MCP troubleshooting"
-description: "Resolve connection, generation, and export problems."
+description: "Fix connection, workspace, task, and tool errors."
 sidebar:
-  order: 37
+  order: 38
 ---
 
-This page is for connecting your own agent. For the chat inside Reachloom, see [Chat with Reachloom AI](/ai/chat) and [troubleshooting](/troubleshooting).
-
-## The client cannot connect
-
-Copy the current server address from your Reachloom MCP setup. Check that the client supports remote MCP over Streamable HTTP. A web-hosted client needs a publicly reachable address.
-
-If the setup page says MCP needs the signed-in version, that runtime does not provide the account-based server. Use the signed-in Reachloom instance.
+Start with the server address shown in the workspace's **Settings → MCP**. The hosted address is `https://app.reachloom.app/mcp`.
 
 ## Authentication fails
 
-Authenticate again through the client, or check that the API-key header uses `Authorization: Bearer YOUR_API_KEY`. A revoked key will not work. Create a new key only if needed; you cannot reveal an old key’s full value again.
+A `401` means the key or access token is missing, expired, revoked, or no longer has access to the workspace.
 
-- **OAuth:** a connection ends if the agent is not used for 30 days, or if you disconnected it. Run the sign-in again. See [Connect with OAuth](/ai/mcp-oauth#if-sign-in-fails).
-- **API key:** a `401` means the key is wrong or was revoked. Check the key on the Developer API page. See [Connect with an API key](/ai/mcp-api-key#see-check-and-revoke-keys).
-- **Too many requests:** a `429` means you went over 120 requests per minute. Wait and try again.
+For an API key, check the `Authorization: Bearer` header and use a key starting with `rl_live_`. Keys are shown only once; revoke a lost key and create another in **Settings → Developer API**.
 
-## The app, asset, or project is missing
+For OAuth, reconnect from the client. Choose a workspace you can still open. Removing a member also revokes that person's keys and agent connections for the workspace.
 
-Call `list_apps`, `list_assets`, or `list_projects` to get IDs from the current account. Check the selected app. Do not reuse IDs from another workspace or assume a display name is an ID.
+## The wrong workspace appears
 
-## Generation is still running
+A connection is limited to one workspace. Reconnect and choose the right one, or create a key from that workspace's settings. There is no tool to switch an existing connection to another workspace.
 
-Keep the returned `jobId`. Poll `get_job` every few seconds and stop when the status is `done` or `failed`. Do not start another generation just because the first request returned a job ID.
+## A campaign cannot be changed
 
-If the service returns a fallback layout, review its note. Reachloom can return a plain layout and refund credits when AI generation is unavailable.
+Pause the campaign or turn on **Review before sending** in the dashboard. MCP blocks changes that could feed an active campaign sending without review.
 
-## Translation or export is blocked
+## A task failed or added fewer pages
 
-Call `get_account` to check the plan, credits, and storage. Translation needs a paid plan. Free exports have different costs and limits.
+Use `get_task` with the returned task ID. Read `error` for a failed task. A successful search can add fewer pages because candidates were duplicates, excluded, unavailable, or unsuitable.
 
-## A download link expired
+There is no export job or file download flow in this MCP server.
 
-Call `get_export` again with the render ID. Finished exports return fresh signed links. See [jobs and exports](/api/jobs).
+## A tool is missing
+
+Check the [tool reference](/api/tools). MCP prepares outreach; it does not send, approve, delete, or manage settings. Use the dashboard for those actions.
+
+## Too many requests
+
+A `429` response includes `retry-after`. Wait before trying again. Searches, drafting, and inbox sync also have hourly limits. A billing or usage error needs to be resolved in **Settings → Billing**.

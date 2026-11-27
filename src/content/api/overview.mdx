@@ -1,16 +1,16 @@
 ---
 title: "Agent API overview"
-description: "The Reachloom MCP server: address, tools, and limits."
+description: "The workspace-scoped Reachloom MCP server, tools, and limits."
 sidebar:
   order: 0
 ---
 
-Reachloom has one agent interface: a remote [MCP](/ai/mcp) server at `/mcp` on your Reachloom address. For the hosted app this is `https://app.reachloom.app/mcp`.
+Reachloom exposes a remote [MCP](/ai/mcp) server at `https://app.reachloom.app/mcp`. It uses Streamable HTTP and supports OAuth access tokens or workspace API keys as bearer tokens.
 
-- [Authentication](/api/authentication): sign in with OAuth or send an API key.
-- [Tools](/api/tools): every tool the server registers, grouped by task.
-- [Jobs and exports](/api/jobs): how background work reports progress.
+- [Authentication](/api/authentication): endpoints, credentials, workspace selection, and limits.
+- [Tools](/api/tools): every registered tool and its inputs.
+- [Background tasks](/api/jobs): follow lead searches with `get_task`.
 
-Every tool acts for the account that signed in. It can see all of that account's apps and spends that account's credits.
+Every connection acts for one person in one workspace. Membership is checked when credentials are used. An agent can read and prepare outreach; approval, sending, starting campaigns, and destructive actions stay in the dashboard.
 
-Tool errors come back as readable messages, for example a plan limit or not enough credits. Anything unexpected returns a short generic error.
+Tool responses contain JSON as text. Expected errors return `isError: true` with a readable message. Unexpected errors return a generic message.

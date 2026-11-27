@@ -1,24 +1,26 @@
 ---
 title: "Account access and connected tools"
-description: "Manage sessions, agent keys, and OAuth connections."
+description: "Manage sessions and workspace-specific agent credentials."
 sidebar:
   order: 42
 ---
 
-Use the account pages to review your profile, sessions, and developer connections.
+Use the account menu to review your profile, sessions, and sign-in connections. Workspace agent credentials are under **Settings → Developer API**.
 
 ## API keys
 
-Open **Developer API** to create a named key for an agent. The full key is shown only when you create it. Store it in the client’s private configuration.
+Create a named key in the workspace that the agent should use. The full key appears only once. Give each client its own key and store it in the client's private configuration.
 
-Keys are account-wide rather than limited to one app. They can let an agent use your apps and credits. Revoke keys you no longer use.
+Keys belong to one workspace and the person who created them. Any member can review the workspace's keys and revoke one. A key stops working when revoked or when its creator loses workspace access.
 
-## OAuth connections
+## Connected agents
 
-When a client supports OAuth, you can connect by signing in and authorizing the client. Review connected tools in Developer API and revoke connections you no longer need.
+OAuth asks you to choose one workspace. Review **Connected agents** in that workspace's **Developer API** settings and disconnect tools you no longer use.
 
-## Sessions
+An agent can read workspace data and prepare campaigns and drafts. It cannot send email or manage access. See [MCP capabilities](/ai/mcp-capabilities).
 
-Review sessions in your account if you need to check where you are signed in. Use the account controls for ending sessions or changing your profile.
+## Sessions and deletion
 
-For an authentication problem, see [MCP troubleshooting](/ai/troubleshooting). For support, contact [hello@reachloom.app](mailto:hello@reachloom.app) without sending keys or passwords.
+Use the account's session controls to end sessions you no longer need. Workspace deletion is a separate action under **Settings → Delete workspace** and removes that workspace's data. Account deletion removes your account and its related access; check shared workspaces before deleting it.
+
+For connection errors, see [MCP troubleshooting](/ai/troubleshooting).
