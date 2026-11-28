@@ -5,7 +5,11 @@ sidebar:
   order: 24
 ---
 
-Open **Results** to see outreach over the last 90 days. The chart records observed activity by UTC date.
+Open **Results** to see outreach across every campaign. It has three tabs: **Overview**, **Links** (with the number of watched links), and **Search**.
+
+## Overview
+
+Choose 7d, 30d, or 90d at the top right. The chart records observed activity by UTC date.
 
 | Measure | What it counts |
 | --- | --- |
@@ -15,9 +19,27 @@ Open **Results** to see outreach over the last 90 days. The chart records observ
 
 A sent email means the mailbox provider accepted it. It does not prove that the person opened or read it. Automatic replies and bounce notices do not count as human replies.
 
+## Links
+
+**Links** lists every link Reachloom watches, with its status: Live, Changed, Not seen, Gone, or Could not check. A link is watched after Reachloom found it on a page you emailed. A win you mark by hand has no link to watch. For the statuses, how often a link is checked, and when you hear about a change, see [Link monitoring](/publishing/link-monitoring).
+
+## Search
+
+**Search** shows clicks, impressions, and top queries from Google Search Console. It needs the connector, which is switched on per server and stays off until Google approves it. Until then the tab says that Search Console is not available yet. See [Search Console](/account/search-console).
+
 ## Link checks
 
-Mention and list campaigns can reopen contacted pages to look for a link to your website. Finding one marks the conversation won. Checks cover emailed pages for up to 90 days, according to the campaign's [Automation](/tools/automation) settings.
+There are two kinds of check, and they do different jobs.
+
+| | Looking for the first link | Watching a link after a win |
+| --- | --- | --- |
+| Where | Mention and list campaigns | **Results → Links** |
+| What it does | Reopens contacted pages to look for a link to your website. Finding one marks the conversation won | Reopens the page of a link that was found, to see if it is still there |
+| How often | Every few days, set in the campaign's [Automation](/tools/automation) (1 to 30 days, 3 by default) | About once a week. A link that was not seen is checked again after a day |
+| For how long | Up to 90 days after the conversation started | Not limited to 90 days |
+| Result | A win, or nothing | A status, and a notice when a change is confirmed |
+
+The first check stops being useful once the link is found. From then on only the weekly watch runs.
 
 When a check finds the link, the won conversation shows the link's words and how it is marked (followed, or `nofollow`, `sponsored`, `ugc`). That says what was seen on the page. It does not say what the link does for ranking.
 

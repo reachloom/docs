@@ -9,11 +9,14 @@ Use a campaign's **Emails** menu to write first emails. Reachloom reads each eli
 
 ## Review drafts
 
-Open **Inbox → Drafts** and choose an email. Check the recipient, subject, message, and reason the page fits. Edit anything that needs changing.
+Open **Inbox → Drafts** and choose an email. Check the recipient, subject, and message. **To** is a person chip that opens [People](/tools/people). **From** reads `Name <email>` and opens **Settings → Mailbox**. The page chip opens that page inside its campaign, and the campaign chip opens the campaign. Click the subject or the message to edit it.
 
-- **Approve** queues the email with a cancel delay, normally five minutes.
-- **Take back** returns a queued email to a draft before it leaves.
-- **Send now** sends directly after the contact, mailbox, billing, and daily limit checks.
+- **Approve** is the green button. It queues the email with a cancel delay, normally five minutes.
+- **Send now** sends directly after the contact, mailbox, billing, and daily limit checks. It asks you to confirm. On a draft it is in the ⋮ menu. On a queued email it is the main button.
+- **Take back** returns a queued email to a draft before it leaves. It is in the ⋮ menu.
+- **Remove email**, also in the ⋮ menu, throws the email away.
+
+An answer waiting inside a conversation has its own buttons under the answer: **Send now**, **Take back** for a queued one, **Edit**, and **Discard**.
 
 Editing a queued email returns it to a draft. Failed sends are not retried automatically.
 
@@ -35,7 +38,9 @@ An email can remain queued after its delay if the mailbox, working hours, limits
 
 ## What every first email contains
 
-A first email or follow-up ends with your signature, your [postal address](/publishing/sender), the line asking the reader to reply "no", and an unsubscribe link (which you can turn off). Nothing is sent until the postal address is set.
+A first email or follow-up ends with your signature, your [postal address](/publishing/sender) if you set one, and a line with an unsubscribe link. The draft already ends with the signature. The postal address and the unsubscribe line are added when the email is sent, so you do not see them in the draft.
+
+There is no line that asks the reader to reply "no". A reply of "no" or "stop" is still read as an opt-out. You can turn the unsubscribe link off in **Settings → Sender**. The `List-Unsubscribe` header, which gives mail apps their own Unsubscribe button, is sent either way where the provider allows it. Answers inside a conversation carry none of this.
 
 ## Contact rules
 

@@ -1,0 +1,63 @@
+---
+/**
+ * A short looping demo of the dashboard, drawn with the app's own look and made-up Counter API data (no real people or sites).
+ * Files live in public/demos: `<name>-light.gif`, `<name>-dark.gif` and a still of the last frame for each, `<name>-light.webp`
+ * and `<name>-dark.webp`. The still replaces the GIF when the reader asked their system for reduced motion, and the pair is
+ * switched by the site's own light/dark mode (an image cannot read it). Write what the demo shows in the text next to it:
+ * the plain-text version of a page has no pictures.
+ */
+interface Props {
+  name: string;
+  /** What the demo shows, for screen readers. */
+  alt: string;
+  caption?: string;
+  width?: number;
+  height?: number;
+}
+
+const { name, alt, caption, width = 960, height = 540 } = Astro.props;
+const modes = ["light", "dark"] as const;
+---
+
+<figure class="demo">
+  {
+    modes.map((mode) => (
+      <picture class={`demo-${mode}`}>
+        <source media="(prefers-reduced-motion: reduce)" srcset={`/demos/${name}-${mode}.webp`} />
+        <img src={`/demos/${name}-${mode}.gif`} alt={alt} width={width} height={height} loading="lazy" decoding="async" />
+      </picture>
+    ))
+  }
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<style>
+  .demo {
+    margin: 1.5rem 0;
+  }
+  .demo picture {
+    display: block;
+  }
+  .demo img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    border: 1px solid var(--nb-border);
+    border-radius: 0.75rem;
+    background: var(--nb-card);
+    box-shadow: var(--nb-shadow-sm);
+  }
+  .demo figcaption {
+    margin-top: 0.5rem;
+    color: var(--nb-muted-foreground);
+    font-size: 0.8125rem;
+    line-height: 1.4;
+    text-align: center;
+  }
+  /* The picture for the other mode is not drawn, so it is not downloaded either. */
+  :global(html[data-mode="dark"]) .demo-light,
+  :global(html:not([data-mode="dark"])) .demo-dark {
+    display: none;
+  }
+</style>

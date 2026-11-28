@@ -1,0 +1,56 @@
+---
+title: "Content"
+description: "Find new pages from your feed or sitemap, promote one page, and get campaign ideas."
+sidebar:
+  order: 17
+---
+
+Content watches your own site. Open **Content** in the sidebar to see three screens: **Pages** (what a campaign can promote), **Ideas** (campaign suggestions) and **Sources** (the feeds and sitemaps that bring pages in). Each is a table you can search and filter. Nothing here contacts anyone: a new page only appears in the list.
+
+This is not the content editor. The content editor would write and publish articles for you, and it is not available.
+
+## Add a feed or sitemap
+
+Go to **Content → Sources → Add source**. Use the address of your blog's RSS or Atom feed, or of your XML sitemap or sitemap index. **Look on my site** finds the usual ones for you. The address must be on your workspace's domain or one of its subdomains, and a workspace can watch up to 5 sources (1 in the free preview). A workspace set up on a subdomain such as `my.example.com` covers only that subdomain and the ones under it, not `example.com`.
+
+- Reachloom checks each source about every 12 hours. If the site has not changed it answers “not modified” and nothing else is read.
+- The first check brings in only the 10 newest pages. Older pages are not added, so a long archive never becomes a pile of work.
+- A page is added once, however often the feed repeats it. Tracking parameters such as `utm_source` are ignored; other query strings are kept.
+- A feed that is down, slow or broken keeps the pages it already gave. After three failed checks in a row the source shows a problem, and checks slow down. Pause or remove a source from its menu.
+- A sitemap's `lastmod` date is only a hint. Reachloom reads the page itself to learn its title and sections.
+
+A new page only appears under **Pages**. Reachloom does not create campaign ideas for it by itself: press **Get ideas** on the page when you want some. If you want to hear about new pages, switch on **Updates** on a notification channel and you get a "New page found" message. A workflow of your own can react to that message (see Automation recipes under AI).
+
+Reachloom only fetches public pages of your own site, never private or internal addresses, and treats everything it reads as text, not instructions.
+
+## Add a page by hand
+
+On **Content → Pages**, press **Add page** and paste the address of a page. It must be on your site's domain or one of its subdomains (for a workspace on `example.com`, that includes `docs.example.com` and `my.example.com`), and it must open: a page that is not found, or that sends you to another site, is not added. Reachloom reads its title and sections and lists it with the others. A page already in the list is not added twice, and a workspace can list up to 500 pages (5 in the free preview).
+
+The demo shows the whole path: a feed and a sitemap are found on the site and added as sources, their new pages appear under **Pages**, and **Add page** adds one more by hand.
+
+<Demo name="content-sources" alt="Content: feeds and sitemaps found on the site are added as sources, new pages appear under Pages, and a page is added by hand with Add page." caption="Sources found, pages listed, Add page." />
+
+## Promote one page
+
+Pages do not make campaigns directly. Right-click a page, or open it and press **Get ideas**: the strategist suggests campaigns for that page, and they appear under **Ideas**. Edit one, improve it, and create the campaign from there (see below). The campaign is paused, like every campaign. It uses the page's title and sections when it searches and writes, and a win only counts when the other site links to **that page** — a link to your home page does not. Over [MCP](/api/tools) you can still pass a page's id to `create_campaign`.
+
+If a page you promote returns “not found” on three checks in a row, it is marked gone, the campaign's channels get a problem notice, and nothing is deleted. Conversations and links you already won stay as they are.
+
+## Campaign ideas
+
+Press the sparkles button to get up to 5 ideas for the whole site, or use **Get ideas** on a page for ideas about that page. They appear under **Ideas**. For every idea you see:
+
+- why it fits, and the searches it would run;
+- **From your pages**: what your pages actually say;
+- **Assumed by the AI**: what it guessed.
+
+Click an idea to open it on the right. Every field can be changed in place: the title, the kind of campaign, why it fits, who to find, the searches (one per line), what a good page looks like, and why they would care. Leaving a field saves it. **Improve with AI** rewrites the idea using your product text and the page: you can add an instruction such as "aim at documentation sites", and **Undo** puts the old text back. The AI keeps the kind of campaign, and its answer is checked like any other.
+
+When it reads right, **Create campaign** (the button in the open idea, or **Create campaign** in the row's menu) makes a paused campaign with the audience, angle and searches filled in, and takes you straight to it. The campaign's header shows a **From idea** badge that opens the idea, and its Brief has an **Idea** row. Choose a mailbox and switch it on yourself. Nothing is searched, written or sent before that, and ideas promise no placement, ranking or traffic. Once an idea has become a campaign it is read-only: change the campaign instead.
+
+The demo shows the steps: open an idea, change a field, press **Improve with AI**, press **Undo**, then **Create campaign**. The new campaign shows **From idea**.
+
+<Demo name="ideas-edit" alt="An idea is opened and edited, improved with AI, restored with Undo, and turned into a campaign that shows From idea." caption="Edit an idea, Improve with AI, Undo, Create campaign." />
+
+Ideas that need a kind of campaign Reachloom does not have yet (guest posts, podcasts, journalists) are not shown. You can ask for them under Feature requests.

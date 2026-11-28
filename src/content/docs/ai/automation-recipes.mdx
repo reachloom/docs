@@ -1,0 +1,36 @@
+---
+title: "Automation recipes"
+description: "Connect n8n, Zapier or Make to Reachloom with signed webhooks and the MCP endpoint."
+sidebar:
+  order: 36
+---
+
+Reachloom has no native n8n, Zapier or Make connector. These recipes use two things that exist: [signed webhooks](/api/webhooks) going out, and the [MCP endpoint](/api/overview) coming in. The recipes call `/mcp` over HTTP. MCP cannot create ideas, edit content sources, or switch campaigns on. Keep secrets in each tool's credential store, never in the workflow text.
+
+**Calling MCP from an HTTP step.** `POST https://my.reachloom.app/mcp` with headers `authorization: Bearer <workspace API key>`, `content-type: application/json` and `accept: application/json, text/event-stream`, and a JSON-RPC body: `{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"list_content","arguments":{}}}`. The answer's `result.content[0].text` is JSON. Create the key under Settings → Developer API.
+
+**Retries and duplicates.** Reachloom makes 3 attempts in total for a webhook (the first send and 2 retries), and **Send again** repeats a failed message with the same `id`. Store the `id` of what you handled and skip a repeat. Updates carry an `id`; see [Webhooks](/api/webhooks#duplicates). `create_campaign` is not idempotent: a retry makes a second paused draft.
+
+## n8n: a link was won → notify and log
+
+1. **Webhook** node, method POST. Use its production URL as a Reachloom webhook channel.
+2. **Code** node: compute `HMAC-SHA256(secret, timestamp + "." + rawBody)` and compare it with the `x-reachloom-signature` header; stop when it differs or the timestamp is more than 5 minutes old. [Webhooks](/api/webhooks#check-the-signature) has full code for Node and Python.
+3. **IF** `event` is `won`.
+4. **Google Sheets** (append a row with `url`, `subject`, `at`) or **Slack** (a message).
+
+The `won` event carries the contact's address; keep it out of public channels.
+
+## Zapier: a positive reply → CRM task
+
+1. **Webhooks by Zapier → Catch Hook** is the channel address.
+2. **Filter**: `event` is `agreed`.
+3. **Code by Zapier**: verify the signature as above (Catch Hook gives the raw body with *Catch Raw Hook*).
+4. Create a task or contact in your CRM from `contact`, `subject` and `url`.
+
+## Make: a new article → paused campaign draft
+
+1. **Webhooks → Custom webhook** is the channel address, with **Updates** switched on.
+2. **Filter**: `type` is `content.discovered`.
+3. **HTTP → Make a request** to the MCP endpoint with `create_campaign`: `name` (the page title), `kind` `docs`, `ask`, and `contentAssetId` = `data.assetId`.
+
+The campaign is paused and waits for review of every email. You choose what to switch on in the dashboard; no outreach starts from the workflow.

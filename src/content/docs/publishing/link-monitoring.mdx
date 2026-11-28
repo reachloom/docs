@@ -1,0 +1,34 @@
+---
+title: "Link monitoring"
+description: "How Reachloom keeps an eye on the links you won, and when it says one is gone."
+sidebar:
+  order: 24.5
+---
+
+When Reachloom finds your link on a page you emailed, it starts watching that page. **Results → Links** lists every watched link with its status. Only links Reachloom found itself are watched; a win you mark by hand has no link to look for. Reachloom does not look at the rest of the web and is not a backlink index.
+
+## How often
+
+Each link is checked about once a week. A link that was not seen is checked again after a day.
+
+## Statuses
+
+| Status | Meaning |
+| --- | --- |
+| Live | The link was seen at the last check |
+| Changed | The link now reads differently (for example it became `nofollow`) or points to another page of your site |
+| Not seen | Not seen on one check. It is checked again before anything is said |
+| Gone | Not seen on two successful checks at least a day apart |
+| Could not check | The page did not answer, blocked the check, or sent it to another site. This is **not** a lost link |
+
+A page that is down, a server error, a blocked request or a login or consent page never counts toward “Gone”. A page that answers “not found” counts like a page without the link, and still needs two checks.
+
+For example: a watched link is **Live**. At the next weekly check it is not on the page, so it shows **Not seen**. A day or more later it is still missing, so it shows **Gone**. If the link comes back at a later check, it shows **Live** again. The demo shows this order.
+
+<Demo name="link-monitoring" alt="Results, Links tab: a watched link goes from Live to Not seen to Gone, and later back to Live." caption="Live, Not seen, Gone, and back to Live." />
+
+## When you hear about it
+
+A confirmed change (Changed, Gone, or back to Live afterwards) is announced once, in the campaign's Activity and to channels with **Updates** switched on (see [Notifications](/account/notifications)). Reachloom never sends a recovery email by itself.
+
+Reachloom reads pages at a low rate with its own user agent. It does not read a site's `robots.txt`.

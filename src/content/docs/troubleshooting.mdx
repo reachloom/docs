@@ -33,6 +33,53 @@ Failed sends are not retried automatically. Read the error and check the mailbox
 
 Reachloom reads only conversations started by its own sent emails. Use **Check inbox** and confirm the mailbox can read replies (for an SMTP mailbox, that IMAP is switched on). Reconnect if the mailbox needs it.
 
+## A content source shows a problem
+
+After three failed checks in a row, a source in **Content → Sources** shows a problem and its checks slow down. Open the source for the reason. Check that the feed or sitemap address opens in a browser and returns a feed or sitemap, not a web page. The pages it already gave stay. Pause or remove the source from its menu, or add the right address.
+
+- **The address is refused as being on another domain.** Only addresses on your workspace's domain or its subdomains can be added. A workspace set up on `my.example.com` covers only that subdomain and those under it, not `example.com`. Check the website in **Settings → General**.
+- **A workspace can watch 5 sources and list 500 pages.** Remove a source or a page you do not need first.
+- **A page is marked gone.** A page that answers "not found" on three checks in a row is marked gone. Nothing is deleted, and conversations and won links stay as they are. A campaign that promotes it gets a problem notice. Check that the page still opens. See [Content](/tools/content).
+
+## Add page is refused
+
+**Add page** on **Content → Pages** takes one page of your own site. It is refused when:
+
+- the address is not on your site's domain or one of its subdomains;
+- the page does not open, answers "not found", or sends you to another site;
+- the page is already in the list;
+- the workspace already lists 500 pages.
+
+Fix the address and try again. Adding pages of other people's sites is a different action: see [Pages and CSV](/tools/pages).
+
+## A webhook fails the signature check
+
+Check these, in order:
+
+1. Compute the signature over the **raw body**, not over JSON that was parsed and written again.
+2. The signed text is `timestamp.body`: the `x-reachloom-timestamp` value, a dot, then the body.
+3. Use the secret of that channel. **Rotate signing secret** makes the old one stop working at once.
+4. The signature header starts with `sha256=`. Compare the whole value, or add the prefix yourself.
+5. Your server's clock must be within 5 minutes of the real time if you reject old timestamps.
+
+Code for Node and Python is on [Webhooks](/api/webhooks#check-the-signature).
+
+## A webhook delivery failed
+
+Open the channel's **Delivery log** (right-click the row in **Settings → Notifications**). It shows the HTTP status your server gave and a short reason. The address must be `https`, public, and answer with a `2xx` status within 8 seconds. Redirects are not followed. Reachloom makes 3 attempts in total. Fix your server, then press **Send again** on the failed row. The message has the same `id` as before. See [Webhooks](/api/webhooks#delivery-log-and-sending-again).
+
+## A link shows "Could not check"
+
+**Could not check** in **Results → Links** means the page did not answer, blocked the check, or sent it to another site. It does not mean the link is gone. Reachloom looks again after a day. A link is called **Gone** only after two successful checks, at least a day apart, that did not find it. See [Link monitoring](/publishing/link-monitoring).
+
+## The Search tab says it is not available
+
+**Results → Search** needs the Search Console connector. It is switched on per server and stays off until Google approves it, so the tab says that Search Console is not available yet. There is nothing to fix in your workspace. See [Search Console](/account/search-console).
+
+## The weekly report never arrives
+
+The weekly report is sent only to channels with **Updates** switched on. Add or edit a channel in **Settings → Notifications** and turn **Updates** on. It is made on Monday at 09:00 in the workspace's time zone, for the previous Monday to Sunday, and once per week. Check the time zone in **Settings → Sending**. A workspace with no Updates channel gets no report message. See [Notifications](/account/notifications#updates-and-the-weekly-report).
+
 ## WordPress or calendar is unavailable
 
 WordPress publishing and the content editor are not built yet. Use a booking link in **Settings → Sending** for call requests; there is no calendar connection.

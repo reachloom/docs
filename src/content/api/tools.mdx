@@ -7,55 +7,71 @@ sidebar:
 
 All tools act inside the workspace attached to the current key or OAuth connection. Tools prepare work but cannot send or approve email.
 
+Every tool is marked with `destructiveHint: false` and `openWorldHint: false`. The **Read-only** column shows the tools that also set `readOnlyHint: true`: they change nothing.
+
 ## Workspace and campaigns
 
-| Tool | Inputs | Result |
-| --- | --- | --- |
-| `get_status` | None | Product profile, mailbox status, campaign counts, email states |
-| `list_campaigns` | None | Campaign IDs, brief, on/off state, review setting, and `canBeChangedHere` |
-| `create_campaign` | `name`, `kind`, `ask` | Paused campaign requiring review, with `searchTaskId` if a search started |
-| `update_brief` | `campaignId`; optional `ask`, `target`, `angle`, `exclusions` | Updated brief fields |
+| Tool | Inputs | Result | Read-only |
+| --- | --- | --- | --- |
+| `get_status` | None | Product profile, mailbox status, campaign counts, email states | Yes |
+| `list_campaigns` | None | Campaign IDs, brief, on/off state, review setting, and `canBeChangedHere` | Yes |
+| `list_content` | None | `{ "pages": [...] }`: the newest 100 pages found from your feeds and sitemaps, each with `id`, `url`, `title`, `type`, `availability` | Yes |
+| `create_campaign` | `name`, `kind`, `ask`; optional `contentAssetId` | `{ id, name, ask, on, searchTaskId }`. The campaign is paused and requires review | No |
+| `update_brief` | `campaignId`; optional `ask`, `target`, `angle`, `exclusions` | Updated brief fields | No |
 
 `kind` is `docs`, `list`, `call`, or `custom`. A campaign name is 1–60 characters and its ask is at most 300 characters. Brief parts are at most 500 characters each. Give the full replacement text of every part you update.
 
+**`create_campaign` and a page.** `contentAssetId` is a page `id` from `list_content`, at most 100 characters. With it the campaign promotes that one page instead of the whole site, and only a link to that page counts as a win. An unknown id, or one from another workspace, returns `No such page. Use list_content.`
+
+`on` is always `false`. `searchTaskId` is the first search to follow with `get_task`. It is `null` when AI is not set up, the ask is empty, no pages are left in the workspace's plan, or a search for the campaign is already running.
+
 ## Pages and searches
 
-| Tool | Inputs | Result |
-| --- | --- | --- |
-| `list_pages` | `campaignId` | Up to 200 pages with title, contact, email, status, and fit |
-| `add_pages` | `campaignId`, `urls` | Add up to 50 web addresses; no contact email input |
-| `find_leads` | `campaignId`; optional `count`, `focus` | `taskId`, or an existing running task with `alreadyRunning: true` |
-| `get_task` | `taskId` | Status, total, result, and error |
+| Tool | Inputs | Result | Read-only |
+| --- | --- | --- | --- |
+| `list_pages` | `campaignId` | Up to 200 pages with `url`, `title`, `contactName`, `email`, `status`, `fitScore`, `whyFit`, `authorityScore`, `authorityStatus` | Yes |
+| `add_pages` | `campaignId`, `urls` | Add up to 50 web addresses, each at most 500 characters. Returns a summary: `added`, `duplicates`, `invalid`, and `invalidExamples`. No contact email input | No |
+| `find_leads` | `campaignId`; optional `count`, `focus` | `taskId`, or an existing running task with `alreadyRunning: true` | No |
+| `get_task` | `taskId` | Status, total, result, and error | Yes |
 
 `count` is 10, 20, or 30 and defaults to 10. `focus` is at most 300 characters. See [background tasks](/api/jobs) for polling.
 
 ## Emails
 
-| Tool | Inputs | Result |
-| --- | --- | --- |
-| `write_emails` | `campaignId`; optional `count` | Drafting summary; count is 1–10, default 5 |
-| `list_emails` | None | Up to 40 recently updated emails, with IDs, kinds, states, bodies, and errors |
-| `edit_draft` | `emailId`; optional `subject`, `body` | Saves a draft; queued emails are taken back first |
-| `take_back_email` | `emailId` | Returns a queued email to a draft |
+| Tool | Inputs | Result | Read-only |
+| --- | --- | --- | --- |
+| `write_emails` | `campaignId`; optional `count` | Drafting summary; count is 1–10, default 5 | No |
+| `list_emails` | None | Up to 40 recently updated emails, with IDs, kinds, states, bodies, and errors | Yes |
+| `edit_draft` | `emailId`; optional `subject`, `body` | Saves a draft; queued emails are taken back first | No |
+| `take_back_email` | `emailId` | Returns a queued email to a draft | No |
 
-`edit_draft` needs at least one field. Subject is at most 300 characters and body at most 6,000. Drafting is also limited by daily capacity and workspace access.
+`edit_draft` needs at least one field. Only a draft or a queued email can be edited. The schema allows a subject of up to 300 characters and a body of up to 6,000, but a first email (a pitch) must also pass the draft check: a subject on one line of at most 150 characters, and a body of 40 to 4,000 characters. Drafting is also limited by daily capacity and workspace access.
 
 ## Conversations
 
-| Tool | Inputs | Result |
-| --- | --- | --- |
-| `check_inbox` | None | Syncs tracked conversations for new replies |
-| `list_conversations` | None | Up to 60 conversations, with stage, intent, latest text, and `needsReply` |
-| `read_conversation` | `conversationId` | Messages and waiting answers; each message text is limited to 2,000 characters |
-| `draft_reply` | `conversationId`, `body` | Saves an answer as a draft and returns its `emailId` |
+| Tool | Inputs | Result | Read-only |
+| --- | --- | --- | --- |
+| `check_inbox` | None | Syncs tracked conversations for new replies | No |
+| `list_conversations` | None | Up to 60 conversations, with stage, intent, latest text, and `needsReply` | Yes |
+| `read_conversation` | `conversationId` | Messages and waiting answers; each message text is limited to 2,000 characters | Yes |
+| `draft_reply` | `conversationId`, `body` | Saves an answer as a draft and returns its `emailId` | No |
 
-A reply body is 10–5,000 characters and must include the whole message. It goes through the draft checks. `draft_reply` refuses won or archived conversations and does not replace an answer written or approved by a person.
+`draft_reply` takes a body of 10–5,000 characters in the schema. It must include the whole message. The draft check then applies, and it rejects:
+
+- a body of more than 4,000 characters;
+- placeholders that were not filled in;
+- text that says AI or an automated tool wrote it;
+- links to sites other than the workspace's site, its booking link, or the page's own domain.
+
+The tool refuses won or archived conversations. It replaces any other waiting draft or failed answer in the conversation. It refuses when an answer is queued, or when an answer written by the owner is waiting.
 
 ## Restrictions and limits
 
 `update_brief`, `add_pages`, `find_leads`, and `write_emails` refuse a campaign that is on and sends without review. Pause it or enable **Review before sending** in the app first.
 
-| Action | Hourly limit per person and workspace |
+Five tools have an hourly limit for each person and workspace. The window is a fixed clock hour, so the count starts again at the top of the hour.
+
+| Action | Hourly limit |
 | --- | --- |
 | Create campaign | 20 |
 | Add pages | 20 |
@@ -63,4 +79,10 @@ A reply body is 10–5,000 characters and must include the whole message. It goe
 | Write emails | 10 |
 | Check inbox | 20 |
 
-The endpoint also allows 120 requests per minute per person and workspace. [Billing limits](/account/plans), contact rules, and draft checks still apply. There are no tools for sending, approval, deleting, switching campaigns on, or managing settings.
+Going over an hourly limit is a tool error, not an HTTP error. The call succeeds at the HTTP level and returns `isError: true` with the text `Too many requests of this kind this hour. Wait and try again.`
+
+Separately, the endpoint allows 120 requests per minute for each person and workspace. Over that limit, the server answers HTTP `429` with `retry-after: 60`. [Billing limits](/account/plans), contact rules, and draft checks still apply.
+
+## What MCP cannot do
+
+There are no tools for sending, approval, deleting, switching campaigns on, or managing settings. MCP also cannot create ideas, edit content sources, or switch a campaign on. Ideas and sources are managed in the dashboard under [Content](/tools/content).

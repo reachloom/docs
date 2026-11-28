@@ -13,16 +13,21 @@ An MCP connection works in one workspace, for the person who allowed it or made 
 | --- | --- |
 | Workspace | Read the product profile, mailbox status, campaign counts, and email states |
 | Campaigns | List campaigns, create a paused campaign requiring review, and update a brief |
-| Pages | List pages, add up to 50 page addresses per call, and find 10, 20, or 30 leads |
+| Content | List the pages found from your feeds and sitemaps (the newest 100), and create a campaign that promotes one of them |
+| Pages | List a campaign's pages, add up to 50 page addresses per call, and find 10, 20, or 30 leads |
 | First emails | Write up to 10 drafts per call, list recent emails, edit drafts, and take back queued emails |
 | Conversations | Sync replies, list conversations, read a thread, and save an answer as a draft |
 | Tasks | Check lead-search progress and results |
 
-Creating a campaign can start a search for 20 pages. Follow `searchTaskId` with `get_task` if it is returned.
+Creating a campaign can start a search for 20 pages. Follow `searchTaskId` with `get_task` if it is returned. It is empty when AI is off, the ask is empty, no pages are left in the plan, or a search is already running.
+
+A campaign that promotes one page counts only a link to that page as a win. Pass `contentAssetId` from `list_content` to `create_campaign` to make one.
 
 ## What it cannot do
 
 The MCP server has no tools to send or approve email, switch campaigns on, mark wins, archive conversations, delete data, lift exclusions, or manage members, billing, or credentials.
+
+MCP cannot create ideas, edit content sources, or switch a campaign on. Do those in the dashboard under [Content](/tools/content) and on the campaign.
 
 An agent cannot set a contact email. You can type it in the app, or let Reachloom find an address on a page it opens.
 
@@ -34,6 +39,10 @@ Pause the campaign or switch review on in the dashboard before asking an agent t
 
 ## Draft protection
 
-Editing a queued email takes it back to a draft. A reply draft cannot replace an answer you wrote or already approved. AI-written drafts still go through the draft checks before sending.
+Editing a queued email takes it back to a draft. A reply draft replaces any other waiting draft or failed answer in that conversation, but it never replaces an answer you wrote or one that is already queued. Drafts written through MCP go through the draft check: no unfilled placeholders, nothing that says AI wrote it, and no links except to your site, your booking link, or the page's own site. A first email must have a one-line subject of at most 150 characters and a body of 40 to 4,000 characters.
+
+## Calling it from other tools
+
+n8n, Zapier, and Make have no connector for Reachloom. Their recipes call `/mcp` over HTTP with an API key. See [Automation recipes](/ai/automation-recipes).
 
 Every registered tool and its inputs are listed in the [tool reference](/api/tools).

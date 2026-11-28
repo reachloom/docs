@@ -35,4 +35,20 @@ Check the [tool reference](/api/tools). MCP prepares outreach; it does not send,
 
 ## Too many requests
 
-A `429` response includes `retry-after`. Wait before trying again. Searches, drafting, and inbox sync also have hourly limits. A billing or usage error needs to be resolved in **Settings → Billing**.
+Only the limit of 120 requests per minute returns an HTTP `429`. It includes `retry-after: 60`, so wait a minute and try again.
+
+Creating campaigns, adding pages, searching, drafting, and inbox sync also have hourly limits. These do not return `429`. The tool answers with an error (`isError`) that says `Too many requests of this kind this hour. Wait and try again.` The hour is a fixed clock hour, so the count starts again at the top of the next hour.
+
+A billing or usage error needs to be resolved in **Settings → Billing**.
+
+## A draft was refused
+
+`draft_reply` and `edit_draft` run the draft check. A reply can be up to 4,000 characters even though the input accepts more. The check also refuses unfilled placeholders, text that says AI wrote it, and links to sites other than yours, your booking link, or the page's own site. A first email needs a one-line subject of at most 150 characters and a body of 40 to 4,000 characters. `draft_reply` also refuses when an answer is queued or one you wrote is waiting.
+
+## A request returns 503
+
+`The MCP server needs the signed-in PostgreSQL runtime.` means the server is not running in the mode that MCP needs. Contact [hello@reachloom.app](mailto:hello@reachloom.app).
+
+## The page id is not found
+
+`create_campaign` with `contentAssetId` answers `No such page. Use list_content.` when the id is unknown or belongs to another workspace. Read the id from `list_content` in the same connection.

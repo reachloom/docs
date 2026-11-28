@@ -22,6 +22,19 @@ The agent can:
 
 The first search starts when the campaign is created, so wait for it before starting another search. Open **Inbox → Drafts** to review the emails. The agent cannot approve them or switch the campaign on.
 
+## Promote one page
+
+> List the pages found on my site and make a paused campaign that promotes the new pricing page. Find pages for it and prepare five emails.
+
+The agent can:
+
+1. Call `list_content` and pick the page's `id`.
+2. Call `create_campaign` with `contentAssetId` set to that `id`. Unknown ids return `No such page. Use list_content.`
+3. Follow the returned `searchTaskId` with `get_task`, if present.
+4. Read `list_pages`, then call `write_emails`.
+
+A campaign for one page counts only a link to that page as a win. The campaign is paused and waits for review of every email. MCP cannot create ideas, edit content sources, or switch the campaign on: do those in the dashboard.
+
 ## Add pages you found
 
 > Add these three page addresses to the paused campaign, then show me its pages. Do not invent contact details.

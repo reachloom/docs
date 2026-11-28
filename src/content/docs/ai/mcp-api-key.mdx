@@ -104,6 +104,8 @@ If you think a key leaked, revoke it first. Then create a new one and update you
 
 ## Limits
 
-Reachloom allows up to 120 MCP requests per minute for each person and workspace. When you go over, the server answers `429` with a `retry-after` header. Wait and try again.
+Reachloom allows up to 120 MCP requests per minute for each person and workspace. When you go over, the server answers HTTP `429` with `retry-after: 60`. Wait and try again.
+
+Five tools (create campaign, add pages, find leads, write emails, check inbox) also have an hourly limit. Going over one is not an HTTP error: the tool returns an error that says `Too many requests of this kind this hour. Wait and try again.` The hour is a fixed clock hour. See the [tool reference](/api/tools#restrictions-and-limits).
 
 For all the technical details, see [Authentication](/api/authentication#api-keys).

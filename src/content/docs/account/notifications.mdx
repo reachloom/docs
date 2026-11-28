@@ -24,3 +24,48 @@ Choose **Slack**, **Discord**, **Webhook**, or **Email**, enter the details requ
 Open a campaign's notification settings to choose its events and destinations. The default is every event on every channel. A campaign that saved its own list of events before **They agreed** existed does not send it until you switch it on. Workspace-wide problems can notify channels independently of a campaign's choices.
 
 Notifications are delivered in the background. Check the Inbox and Activity for the full conversation and error details.
+
+## Updates and the weekly report
+
+Each channel has an **Updates** switch, off by default. When it is on, the channel also hears about things that are not about one campaign:
+
+| Update (`type`) | When |
+| --- | --- |
+| `content.discovered` | A new page was found from a feed or sitemap (not for the first import) |
+| `campaign.recommended` | New campaign ideas are ready |
+| `campaign.draft_created` | A paused draft was made from an idea |
+| `backlink.status_changed` | A watched link was confirmed changed, gone, or back |
+| `report.ready` | The weekly report |
+
+The **weekly report** goes out on Monday at 09:00 in your workspace's time zone (Settings → Sending), for the previous Monday to Sunday, once. It exists only for workspaces with at least one channel that has **Updates** switched on. It counts pages found by searches, people reached with a first email, replies and positive replies, new links found, links lost, and what is waiting for you. It holds numbers and a link to Results only: no names, addresses or message text.
+
+## Webhook format
+
+The five events above keep the format they always had. Updates use an envelope with an id you can use to deduplicate:
+
+```json
+{
+  "id": "evt_3f1c9a0b2d7e4a61b8c5d0f2",
+  "type": "content.discovered",
+  "version": 1,
+  "created": "2026-11-28T08:00:00.000Z",
+  "workspaceId": "…",
+  "title": "New page found",
+  "url": "https://my.reachloom.app/w/…/content",
+  "data": { "assetId": "…", "url": "https://example.com/blog/post", "sourceId": "…" }
+}
+```
+
+Every webhook is signed. The headers are `x-reachloom-timestamp` (seconds) and `x-reachloom-signature`: `sha256=` followed by the hex HMAC-SHA256 of `timestamp.body` with your secret. Reject a timestamp more than 5 minutes old. Answer with any 2xx status within 8 seconds. Anything else is tried again: 3 attempts in total, waiting 1 and then 2 minutes.
+
+The [Webhooks](/api/webhooks) page has the full payloads, the event types, and code to check the signature in Node and Python.
+
+## Secret, delivery log and sending again
+
+- **Rotate signing secret** makes a new secret and shows it once. The old one stops working immediately.
+- **Delivery log** lists the newest 20 messages of a channel with the answer your server gave (the HTTP status) and why a failed one failed. Older ones are deleted.
+- **Send again** on a failed message sends that same message again with the same `id` and starts its attempts again. It works on failed messages only. Nothing else in Reachloom is repeated.
+
+To open the log, right-click a channel (or use its ⋯ button) and choose **Delivery log**. In the demo, a failed delivery is sent again and then shows as Sent.
+
+<Demo name="webhook-log" alt="The delivery log of a webhook channel: a failed delivery is sent again and then shows as Sent." caption="A failed delivery, Send again, Sent." />

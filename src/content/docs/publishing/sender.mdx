@@ -1,6 +1,6 @@
 ---
 title: "Sender and email footer"
-description: "Set the name, signature, postal address, and unsubscribe line under every email."
+description: "Set the name, signature, optional postal address, and unsubscribe line under every email."
 sidebar:
   order: 21.5
 ---
@@ -13,21 +13,26 @@ The name people see in their inbox, and the `{name}` in your signature. Leave it
 
 ## Postal address
 
-Commercial email must show where its sender can be reached by post. Add yours (up to 3 lines and 200 characters, written as plain text without links). Reachloom prints it above the opt-out line of every **first email and follow-up**.
+A postal address is **optional**. If you add one (up to 3 lines and 200 characters, written as plain text without links), Reachloom prints it above the unsubscribe line of every **first email and follow-up**. Leave it empty and emails go out without it.
 
-**Nothing is sent until you add it.** First emails and follow-ups wait with the reason shown, and a campaign cannot be switched on without it. Answers inside a conversation do not carry the address.
+Some countries require commercial email to show where its sender can be reached by post. If yours does, add one: Reachloom does not check what your local rules ask for. Answers inside a conversation do not carry the address.
 
 ## Signature
 
 The lines under the message, with `{name}` and `{site}` filled in. Leave it empty for your name and your site. Keep it to a few lines of plain text. It cannot contain placeholders left unfilled, mentions of AI or a tool, or links to sites other than yours and your booking link.
 
-## Footer: saying no
+## Footer: unsubscribe
 
-Every first email and follow-up ends with a line that asks the reader to reply "no". That line is always there. Below it you can show an **unsubscribe link** that stops every campaign for that address at once.
+Every first email and follow-up ends with a line that holds an **unsubscribe link**, below the signature and the postal address if you set one. The link stops every campaign for that address at once. By default the line reads "Or stop all emails from me:" followed by the link.
+
+There is no line that asks the reader to reply "no". It was removed. A reply of "no" or "stop" is still read as an opt-out.
 
 - The link opens a page that asks for confirmation. Opening it does nothing, so mail scanners cannot unsubscribe anyone by accident.
-- Mail apps that offer their own Unsubscribe button get a one-click request as well, where the provider allows it.
-- Turn the link off if you prefer replies only. The opt-out line stays.
+- Mail apps that offer their own Unsubscribe button get a one-click request as well, where the provider allows it. This header is sent even when the link is turned off.
+- Turn the link off if you prefer replies only. Then the line is left out of the email.
 - Word the line your way, in one line up to 200 characters. Put `{link}` where the link goes, or `{link:Click here}` to choose the words that are the link in the HTML version.
+- With the link on, the email goes out as plain text with an HTML version, where the link is a word to click. The plain text keeps the whole address.
+
+Answers inside a conversation and the thank-you carry no unsubscribe line.
 
 Someone who unsubscribes is added to [People](/tools/people) as **Do not contact**, and no campaign writes to them again.

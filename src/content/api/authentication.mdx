@@ -203,7 +203,9 @@ Both credentials use one workspace and the same preparation tools. They can read
 | Token requests | 120 per minute, shared |
 | Client registrations | 30 per hour, shared |
 
-When you go over a limit, Reachloom answers `429` with a `retry-after` header.
+When you go over one of these limits, Reachloom answers HTTP `429` with a `retry-after` header (`60` for the per-minute limits, including the token endpoint, and `3600` for client registrations).
+
+Five MCP tools have an extra hourly limit. That one is not an HTTP error: the call succeeds and returns a tool error, `Too many requests of this kind this hour. Wait and try again.` See the [tool reference](/api/tools#restrictions-and-limits).
 
 ## Keep credentials safe
 

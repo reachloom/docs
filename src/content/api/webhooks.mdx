@@ -1,0 +1,226 @@
+---
+title: "Webhooks"
+description: "Receive signed JSON messages from Reachloom: event shapes, headers, signature checks in Node and Python, retries, and replays."
+sidebar:
+  order: 4
+---
+
+A webhook is a [notification channel](/account/notifications) of the kind **Webhook**. Reachloom sends a signed JSON message to your address when something happens in a workspace. Use it to start your own workflow, such as a row in a sheet or a task in a CRM.
+
+## Set it up
+
+1. Open **Settings → Notifications** and add a channel of the kind **Webhook**.
+2. Enter your address. It must start with `https://` and point to a public server.
+3. Copy the signing secret. It starts with `whsec_` and is shown once.
+4. Open the channel's menu and choose **Send test** to check that your server answers.
+
+A workspace can have up to 10 channels. The address and the secret are stored encrypted and never shown again. The channel list shows only a short, masked form of the address.
+
+## How a message is sent
+
+| Rule | Value |
+| --- | --- |
+| Method | `POST` with a JSON body |
+| Address | `https` only, on a public server. Private and internal addresses are refused |
+| Redirects | Not followed. A redirect counts as a failure |
+| Time limit | 8 seconds to answer |
+| Success | Any `2xx` status |
+| Attempts | 3 in total: the first send and 2 retries |
+| Wait between attempts | At least 1 minute, then at least 2 minutes |
+
+After the third failed attempt the delivery is marked failed and is not retried again. You can send it again by hand (see [Delivery log](#delivery-log-and-sending-again)).
+
+## Headers
+
+| Header | Value |
+| --- | --- |
+| `content-type` | `application/json` |
+| `x-reachloom-timestamp` | The time of this attempt, in seconds since 1970 |
+| `x-reachloom-signature` | `sha256=` followed by the hex HMAC-SHA256 signature |
+
+The signature is the HMAC-SHA256 of the text `{timestamp}.{rawBody}`, made with the channel's secret. `rawBody` is the body exactly as it arrived. Both header values change on every attempt, so a retry carries a fresh timestamp. Only webhook channels have a secret. Slack and Discord channels get no signature headers.
+
+The signature is added to both message shapes described below.
+
+## Check the signature
+
+Read the raw body before you parse it. Parsing and writing it again can change the text and break the check. Compare with a constant-time function, and reject a timestamp older than 5 minutes.
+
+<Tabs syncKey="lang">
+<TabItem label="Node">
+
+```js
+import { createHmac, timingSafeEqual } from 'node:crypto';
+import express from 'express';
+
+const secret = process.env.REACHLOOM_WEBHOOK_SECRET;
+const app = express();
+
+// express.raw keeps the body as bytes, exactly as sent.
+app.post('/reachloom', express.raw({ type: 'application/json' }), (req, res) => {
+  const timestamp = req.get('x-reachloom-timestamp') ?? '';
+  const signature = req.get('x-reachloom-signature') ?? '';
+
+  const age = Math.abs(Date.now() / 1000 - Number(timestamp));
+  if (!(age <= 300)) return res.sendStatus(400);
+
+  const rawBody = req.body.toString('utf8');
+  const expected = 'sha256=' + createHmac('sha256', secret).update(`${timestamp}.${rawBody}`).digest('hex');
+
+  const a = Buffer.from(signature);
+  const b = Buffer.from(expected);
+  if (a.length !== b.length || !timingSafeEqual(a, b)) return res.sendStatus(401);
+
+  const message = JSON.parse(rawBody);
+  // Skip a message you already handled: message.id for updates.
+  console.log(message.type ?? message.event);
+  res.sendStatus(200);
+});
+
+app.listen(3000);
+```
+
+</TabItem>
+<TabItem label="Python">
+
+```python
+import hashlib
+import hmac
+import os
+import time
+
+from flask import Flask, abort, request
+
+SECRET = os.environ["REACHLOOM_WEBHOOK_SECRET"].encode()
+app = Flask(__name__)
+
+
+@app.post("/reachloom")
+def reachloom():
+    raw_body = request.get_data()  # the bytes exactly as sent
+    timestamp = request.headers.get("x-reachloom-timestamp", "")
+    signature = request.headers.get("x-reachloom-signature", "")
+
+    try:
+        age = abs(time.time() - int(timestamp))
+    except ValueError:
+        abort(400)
+    if age > 300:
+        abort(400)
+
+    expected = "sha256=" + hmac.new(
+        SECRET, timestamp.encode() + b"." + raw_body, hashlib.sha256
+    ).hexdigest()
+    if not hmac.compare_digest(signature, expected):
+        abort(401)
+
+    message = request.get_json()
+    # Skip a message you already handled: message["id"] for updates.
+    return "", 200
+```
+
+</TabItem>
+</Tabs>
+
+Answer quickly with a `2xx` status and do slow work afterwards. A slow answer counts as a failure after 8 seconds.
+
+## Two message shapes
+
+### Events about a conversation
+
+Five events keep the shape they have always had: `reply`, `agreed`, `needs_you`, `won`, and `problem`. Each campaign chooses which of them it sends. See [Notifications](/account/notifications#choose-events) for when each happens.
+
+```json
+{
+  "event": "won",
+  "title": "Won",
+  "campaign": "Resource lists",
+  "contact": "alex@example.com",
+  "subject": "Adding Counter API to your uptime tools list",
+  "text": "https://example.com/uptime-tools as \"Counter API\", followed",
+  "url": "https://my.reachloom.app/w/WORKSPACE_ID/inbox?open=t%3ATHREAD_ID",
+  "at": "2026-11-28T09:14:03.000Z"
+}
+```
+
+| Field | Meaning |
+| --- | --- |
+| `event` | `reply`, `agreed`, `needs_you`, `won`, `problem`, or `test` |
+| `title` | A short heading |
+| `campaign` | The campaign's name, or `null` |
+| `contact` | The other person's email address, or `null` |
+| `subject` | The email subject, cut to 200 characters, or `null` |
+| `text` | Up to 200 characters of what was said, or `null` |
+| `url` | A link to the conversation or campaign in Reachloom |
+| `at` | When it happened, as an ISO time |
+
+These messages hold the contact's address and words from other people. Keep them out of public channels. `text` is `null` when the channel's **Reply text** switch is off. For `won`, `text` holds the page address where the link was found and how it is marked.
+
+**Send test** sends the event `test` in this same shape, with the title "Test notification". It goes out once, is not retried, and does not appear in the delivery log.
+
+### Updates
+
+Updates are about the workspace, not about one conversation. They use an envelope with an `id`. They never contain a contact's address.
+
+```json
+{
+  "id": "evt_3f1c9a0b2d7e4a61b8c5d0f2",
+  "type": "content.discovered",
+  "version": 1,
+  "created": "2026-11-28T08:00:00.000Z",
+  "workspaceId": "WORKSPACE_ID",
+  "title": "New page found",
+  "url": "https://my.reachloom.app/w/WORKSPACE_ID/content",
+  "data": {
+    "assetId": "ASSET_ID",
+    "url": "https://example.com/blog/post",
+    "sourceId": "SOURCE_ID"
+  }
+}
+```
+
+| Field | Meaning |
+| --- | --- |
+| `id` | `evt_` and 24 hex characters. The same for every channel and every replay of this event |
+| `type` | One of the types below |
+| `version` | `1` |
+| `created` | When it happened, as an ISO time |
+| `workspaceId` | The workspace |
+| `title` | A short heading |
+| `url` | A link to the matching screen in Reachloom |
+| `data` | The details for this `type` |
+
+| `type` | `data` |
+| --- | --- |
+| `content.discovered` | `assetId`, `url`, `sourceId` |
+| `campaign.recommended` | `taskId`, `count` |
+| `campaign.draft_created` | `campaignId`, `recommendationId`, `assetId` |
+| `backlink.status_changed` | `placementId`, `previousStatus`, `status`, `observedAt` |
+| `report.ready` | `periodStart`, `periodEnd`, `discovered`, `contacted`, `replies`, `positive`, `placements`, `lost`, `waiting` |
+
+Updates reach only channels with **Updates** switched on. That switch is off by default and is separate from a campaign's events. For when each type is sent, see [Updates and the weekly report](/account/notifications#updates-and-the-weekly-report).
+
+The weekly report exists as a message only for workspaces with at least one Updates channel. It is made on Monday at 09:00 in the workspace's time zone, for the previous Monday to Sunday, and once per week.
+
+## Duplicates
+
+Store the `id` of every update you handle and skip one you have seen. The `id` is the same for every channel and for every replay, so a retry or a **Send again** can reach you twice. The five conversation events have no `id`. A repeat of one of these carries the same `at`.
+
+## Delivery log and sending again
+
+In **Settings → Notifications**, open a channel's menu (right-click the row, or use the ⋯ button) and choose **Delivery log**. It keeps the newest 20 finished deliveries of that channel. Each row shows the event, the HTTP status your server answered with, and a short reason when it failed. It never shows the message or the address. Older rows are deleted.
+
+**Send again** works on failed deliveries only. It sends the same message with the same `id` and starts the attempts again from zero. Nothing else in Reachloom is repeated: no email is sent and no campaign changes.
+
+Steps in the demo: a failed delivery appears in the log, you press **Send again**, and the row changes to Sent.
+
+<Demo name="webhook-log" alt="The delivery log of a webhook channel: a failed delivery is sent again and then shows as Sent." caption="A failed delivery, Send again, Sent." />
+
+## Rotate the secret
+
+**Rotate signing secret** makes a new secret and shows it once. The old secret stops working at once. There is no overlap, so update your server first or accept that messages fail the check until you do. Failed deliveries can be sent again after you update.
+
+## Related pages
+
+- [Notifications](/account/notifications) for channels, events, and the weekly report.
+- [Automation recipes](/ai/automation-recipes) for n8n, Zapier, and Make.

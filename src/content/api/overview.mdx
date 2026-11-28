@@ -5,12 +5,28 @@ sidebar:
   order: 0
 ---
 
-Reachloom exposes a remote [MCP](/ai/mcp) server at `https://my.reachloom.app/mcp`. It uses Streamable HTTP and supports OAuth access tokens or workspace API keys as bearer tokens.
+Reachloom exposes a remote [MCP](/ai/mcp) server at `https://my.reachloom.app/mcp`. It uses Streamable HTTP and supports OAuth access tokens or workspace API keys as bearer tokens. The server name is `reachloom`.
 
 - [Authentication](/api/authentication): endpoints, credentials, workspace selection, and limits.
 - [Tools](/api/tools): every registered tool and its inputs.
 - [Background tasks](/api/jobs): follow lead searches with `get_task`.
+- [Webhooks](/api/webhooks): signed messages that Reachloom sends to your server.
 
 Every connection acts for one person in one workspace. Membership is checked when credentials are used. An agent can read and prepare outreach; approval, sending, starting campaigns, and destructive actions stay in the dashboard.
 
 Tool responses contain JSON as text. Expected errors return `isError: true` with a readable message. Unexpected errors return a generic message.
+
+## Transport
+
+The server is stateless. Every request is answered on its own, with a plain JSON response: there is no event stream (SSE) and no session id to keep. `GET`, `POST`, and `DELETE` are handled. A client that sends `accept: application/json, text/event-stream` still gets JSON.
+
+If the server is not running on the signed-in PostgreSQL runtime, it answers `503` with `The MCP server needs the signed-in PostgreSQL runtime.`
+
+## Limits
+
+- 120 requests per minute for each person and workspace. Over that, the answer is HTTP `429` with `retry-after: 60`. The OAuth token and registration endpoints answer `429` the same way when their own limits are passed.
+- Five tools also have an hourly limit. Going over it is a tool error (`isError: true`), not an HTTP `429`. See the [tool reference](/api/tools#restrictions-and-limits).
+
+## What MCP does not do
+
+MCP cannot create ideas, edit content sources, or switch campaigns on. Tools such as n8n, Zapier, and Make can call `/mcp` over HTTP: see [Automation recipes](/ai/automation-recipes).
