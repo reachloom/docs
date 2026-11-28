@@ -1,0 +1,27 @@
+---
+title: "Contacts and Open PageRank"
+description: "How Reachloom finds a professional contact when a site shows none, and what the Open PageRank number means."
+sidebar:
+  order: 25
+---
+
+## Where addresses come from
+
+Reachloom reads addresses on pages it opens itself. When a strong-fit page shows none, and your workspace can send, it can ask **Hunter**, a contact data service, for a professional contact at that site. It uses a small number of lookups and skips anything it cannot justify:
+
+- It prefers a named author or editor, and otherwise a few people at the site. Shared inboxes such as info@ and role addresses are not used unless the campaign allows shared inboxes.
+- It checks Hunter's verdict. An address Hunter calls invalid or disposable is dropped.
+- It opens the page Hunter says it found the address on. **Only an address that is valid and that Reachloom saw on that page can go out on its own.** Any other address from Hunter waits as a draft for you to read and approve, and shows **needs review** in the list.
+- A catch-all, unknown or webmail result is never described as verified.
+
+Hunter lookups are limited per workspace and for the whole service. When Hunter is off, out of allowance or unavailable, nothing changes: discovery works as before and no contact is made up. Having an address, or having it verified, does not mean you have permission to write to the person. Follow the rules that apply where you and they are.
+
+## Fit, authority and contact in the list
+
+The pages list shows, separately:
+
+- **Fit**: a 0 to 100 estimate of how well the page suits what you want, from the same search that found it.
+- **Authority**: the site's **Open PageRank**, 0 to 10, from the public Common Crawl link graph. It is context. It is not Ahrefs DR, Moz DA or Google's own PageRank, and it does not predict rankings or replies. A site the provider has no score for shows **Unknown**, never 0, and shared platforms show **n/a**.
+- **Contact**: the address, with **needs review** where it came from Hunter and was not confirmed.
+
+Use the sort menu for **Best opportunity** (fit counts most, authority a little, an unknown authority neither helps nor hurts) or **Open PageRank**, and to show only pages above a score or with an unknown one. A small, very relevant site is often a better ask than a large, unrelated one.

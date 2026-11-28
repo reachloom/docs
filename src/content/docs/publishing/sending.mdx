@@ -76,3 +76,7 @@ Each day the number goes up by one step when the mailbox was really used (at lea
 **Settings → Sending** shows the day, today's number, and lets you change how established the mailbox is. Choosing Established ends the warm-up and asks you to confirm. Connecting the same address again keeps its progress; a different address starts again.
 
 While the number is used up, a first email waits and the campaign's [Activity](/tools/activity) says so once a day. The drafts a campaign writes are limited to what can actually be sent.
+
+## Email that may or may not have been sent
+
+If the connection drops at the wrong moment, Reachloom cannot always tell whether the provider accepted an email. It marks it **Check Sent folder** and never sends it again by itself. Look in the Sent folder of the mailbox, open the email in the Inbox, and say whether it was sent or not. If a provider only refuses for now (for example a rate limit), Reachloom waits and tries again, up to three times.

@@ -5,7 +5,7 @@ sidebar:
   order: 21
 ---
 
-Each workspace sends from one mailbox. Open **Settings → Mailbox** and choose **Connect mailbox**. All campaigns in the workspace send from it, in your name, and replies come back to it.
+A workspace can connect several mailboxes (up to 5). Open **Settings → Mailbox** and choose **Connect mailbox**. Campaigns send from them in your name, and replies come back to the mailbox the conversation started on.
 
 | Type | Best for | How you connect |
 | --- | --- | --- |
@@ -27,8 +27,19 @@ Reachloom reads only the conversations started by its own sent emails. It does n
 
 Deleting a workspace, or your account with the workspaces only you use, asks Google to revoke Reachloom's access first. Microsoft offers no way to revoke a saved sign-in from here, so remove it in your Microsoft account's app permissions if you want it gone there too. A saved SMTP password is deleted with the connection.
 
-## Change the mailbox
+## Several mailboxes
 
-A workspace has one mailbox at a time. To switch, disconnect the current one and connect another. Conversations already in the Inbox stay. A conversation started from the old mailbox may not get new replies after you disconnect it.
+Each mailbox has its own name, its own daily limit (1 to 50), its own warm-up and its own health. Together they stay within the workspace's daily limit, and the plan's allowance of new people does not grow with more mailboxes.
 
-If the status says **Needs reconnecting**, connect the same mailbox again. Nothing is sent while the provider rejects the saved access.
+- **Which mailbox sends.** By default a new conversation goes from the connected mailbox with the most room left today, taking turns when two are level. On a campaign's **Automation** page you can tick the mailboxes it may use: none ticked means any, one ticked is a dedicated sender.
+- **Sender continuity.** A conversation stays on the mailbox it started from: its answers and follow-ups always leave from there. If that mailbox is paused, disconnected, restricted or full for the day, the conversation waits. It is never moved to another mailbox.
+- **Inbox.** The Inbox shows every mailbox together. When there is more than one, a mailbox filter appears next to the campaign filter.
+- **Pause.** From a mailbox's menu you can pause just that one. **Pause all sending** on the same page stops every mailbox of the workspace at once: nothing new leaves, and queued emails wait. Emails a provider has already accepted cannot be recalled.
+- **Restricted.** If a provider restricts sending from a mailbox, Reachloom stops that mailbox, tells you, and does not send its emails from another one to get around it. Check with the provider, then switch it back on from its menu.
+- **DNS and authentication.** A mailbox's menu has **Check DNS and authentication**. It reads the public SPF, DMARC and MX records of the domain, and DKIM if you give the selector. Each result is verified, misconfigured or unknown. It describes records, not delivery: Reachloom does not claim an email reached an inbox.
+
+## Disconnect or reconnect a mailbox
+
+Disconnecting stops that mailbox at once and deletes its saved access, but keeps its conversations and history. Conversations that started on it wait until it is connected again; connect the same address again and they carry on. To add another address, connect it as a new mailbox.
+
+If the status says **Needs reconnecting**, connect the same mailbox again. Nothing is sent from it while the provider rejects the saved access.
